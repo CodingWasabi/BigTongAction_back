@@ -38,12 +38,15 @@
 ## UseCase 정리
  https://github.com/CodingWasabi/BigTongAction_back/wiki/UseCase-정리
 
-백엔드 에서 구현해야 할 기능은
+
+---
+
+<u>**백엔드 에서 구현해야 할 기능은**</u>
 - [ ] 일일 품목별 경매 정보 리스트 최신화
 - [ ] Web socket을 활용한 실시간 알림
 - [ ] Web socket을 활용한 실시간 채팅
 
-백엔드 개발과 배포를 위해 사용할 기술들
+<u>**백엔드 개발과 배포를 위해 사용할 기술들**</u>
 
   - Spring boot 2.4.5
   - Java 11
