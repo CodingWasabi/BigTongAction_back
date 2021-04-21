@@ -11,7 +11,6 @@
  시장상인, 자영업자들에게 실시간으로 전달.
 
 ## 사용자 특성
----
 - 원재료를 유통받아 식당 장사를하는 자영업자
  - 국내산 농수산물 도소매업자
  - 유통 중간단계의 시장상인
@@ -37,7 +36,7 @@
   - 품목 별 채팅 방
 
 ## UseCase 정리
- <a href src="https://github.com/CodingWasabi/BigTongAction_back/wiki/UseCase-%EC%A0%95%EB%A6%AC"/>
+ <a href src="https://github.com/CodingWasabi/BigTongAction_back/wiki/UseCase-%EC%A0%95%EB%A6%AC">UseCase 정리</a>
 
 백엔드 에서 구현해야 할 기능은
 - [ ] 일일 품목별 경매 정보 리스트 최신화
