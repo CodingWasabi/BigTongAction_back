@@ -36,7 +36,7 @@
   - 품목 별 채팅 방
 
 ## UseCase 정리
- <a href src="https://github.com/CodingWasabi/BigTongAction_back.wiki.git">UseCase 정리</a>
+ https://github.com/CodingWasabi/BigTongAction_back/wiki/UseCase-정리
 
 백엔드 에서 구현해야 할 기능은
 - [ ] 일일 품목별 경매 정보 리스트 최신화
