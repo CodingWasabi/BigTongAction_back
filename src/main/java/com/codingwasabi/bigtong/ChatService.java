@@ -18,6 +18,7 @@ public class ChatService {
 
     private final ObjectMapper objectMapper;
     private Map<Long,ChatRoom> chatRooms;
+    private Map<Long,Integer> peopleInRoom;
 
     @PostConstruct
     private void init(){
@@ -41,6 +42,8 @@ public class ChatService {
                 .build();
 
         chatRooms.put(randomId,chatRoom);
+        peopleInRoom.put(randomId,0);
+
         return chatRoom;
     }
 

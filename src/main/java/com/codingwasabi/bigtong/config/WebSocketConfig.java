@@ -1,4 +1,4 @@
-package com.codingwasabi.bigtong;
+package com.codingwasabi.bigtong.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
