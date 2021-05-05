@@ -1,5 +1,5 @@
 package com.codingwasabi.bigtong;
 
 public enum MessageType {
-    ENTER, TALK
+    ENTER, TALK, EXIT
 }

@@ -8,6 +8,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.Map;
+
 
 @Slf4j
 @Component
@@ -20,8 +22,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception{
         String payload= message.getPayload();
+        Map<String, Object> httpSession = session.getAttributes();
+
         log.info("payload {} ", payload);
-        log.info("this is " + )
+        log.info("this is " + session.getLocalAddress());
+        log.info("remote addr : " + session.getRemoteAddress());
         //TextMessage textMessage = new TextMessage("Welcome to server\n");
         //session.sendMessage(textMessage);
 

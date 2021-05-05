@@ -24,6 +24,10 @@ public class ChatRoom {
             sessions.add(session);
             chatMessage.setMessage(chatMessage.getSender()+"님이 입장했습니다.\n");
         }
+        else if (chatMessage.getType().equals(MessageType.EXIT)){
+            sessions.remove(session);
+            chatMessage.setMessage(chatMessage.getSender()+"님이 퇴장하셨습니다.\n");
+        }
         sendMessage(chatMessage,chatService);
     }
 

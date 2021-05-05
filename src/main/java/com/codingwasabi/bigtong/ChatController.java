@@ -1,6 +1,7 @@
 package com.codingwasabi.bigtong;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,12 +10,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/chat")
-
+@Slf4j
 public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
     public ChatRoom createRoom(@RequestParam String name){
+        log.info("room created : " + name);
         return chatService.createChatRoom(name);
     }
 
@@ -31,5 +33,12 @@ public class ChatController {
             list.add(chatRoom.getRoomId());
         }
         return list;
+    }
+
+    @GetMapping("/people")
+    public int getPeople(@RequestParam Long roomId){
+        ChatRoom chatRoom = chatService.findRoomById(roomId);
+
+        return  chatRoom.getSessions().size();
     }
 }
