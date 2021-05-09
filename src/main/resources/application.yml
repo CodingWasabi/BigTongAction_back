@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      hibernate:
+        format_sql: true
+
+
+  datasource:
+    url: jdbc:postgresql://codingwasabi-relay-db.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    username: relayDB
+    password: codingwasabi
+    driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    org.hibernate.SQL: debug
