@@ -1,6 +1,7 @@
 package com.codingwasabi.bigtong;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,12 @@ import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
+@Getter
 @Service
 public class ChatService {
 
     private final ObjectMapper objectMapper;
     private Map<Long,ChatRoom> chatRooms;
-    private Map<Long,Integer> peopleInRoom;
-
     @PostConstruct
     private void init(){
         chatRooms = new LinkedHashMap<>();
@@ -42,7 +42,6 @@ public class ChatService {
                 .build();
 
         chatRooms.put(randomId,chatRoom);
-        peopleInRoom.put(randomId,0);
 
         return chatRoom;
     }

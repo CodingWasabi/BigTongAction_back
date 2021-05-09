@@ -2,6 +2,7 @@ package com.codingwasabi.bigtong;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
+    @Transactional
     public ChatRoom createRoom(@RequestParam String name){
         log.info("room created : " + name);
         return chatService.createChatRoom(name);

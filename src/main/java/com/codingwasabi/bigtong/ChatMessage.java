@@ -11,5 +11,14 @@ public class ChatMessage {
     private Long roomId;
     private String sender;
     private String message;
+    private int leftPeople;
+
+    public void insert(){
+        this.leftPeople++;
+    }
+
+    public void remove(){
+        this.leftPeople--;
+    }
 
 }
