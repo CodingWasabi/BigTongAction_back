@@ -23,11 +23,14 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+    private Map<String, WebSocketSession> sessions;
 
     // connection 이 연결 되었을때, client의 연결이 성공했을때
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("connect OK, "+session.getLocalAddress());
+        String sessionId = session.getId();
+        sessions.put(sessionId,session);
     }
 
 
@@ -56,5 +59,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                 chatRoom.endAbnormal(session);
 
         }
+
+        sessions.remove(session.getId());
     }
 }
