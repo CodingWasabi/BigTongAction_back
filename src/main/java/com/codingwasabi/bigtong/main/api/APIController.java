@@ -1,5 +1,6 @@
 package com.codingwasabi.bigtong.main.api;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +14,10 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/object")
+@RequiredArgsConstructor
 public class APIController {
+
+    private final APISerivce apiSerivce;
 
     // GRAIN,FRUIT,VEGETABLE,MEAT,FISH
     private String[] GRAIN = {"01","02","03","04","05"};
@@ -28,7 +32,7 @@ public class APIController {
     public String callGrainApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        return apiEndPoint(now,GRAIN);
+        return apiSerivce.apiEndPoint(now,GRAIN);
     }
 
     // 과일류
@@ -36,7 +40,7 @@ public class APIController {
     public String callFruitApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        return apiEndPoint(now,FRUIT);
+        return apiSerivce.apiEndPoint(now,FRUIT);
     }
 
     // 채소류
@@ -44,7 +48,7 @@ public class APIController {
     public String callVegetableApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        return apiEndPoint(now,VEGETABLE);
+        return apiSerivce.apiEndPoint(now,VEGETABLE);
     }
 
     // 육류
@@ -52,51 +56,17 @@ public class APIController {
     public String callMeatApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        return apiEndPoint(now,MEAT);
+        return apiSerivce.apiEndPoint(now,MEAT);
     }
 
     // 생선류
-    @GetMapping("/FISH")
+    @GetMapping("/fish")
     public String callFishApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        return apiEndPoint(now,FISH);
+        return apiSerivce.apiEndPoint(now,FISH);
     }
 
 
-    public String apiEndPoint(String now, String[] objects){
-        StringBuffer result = new StringBuffer();
 
-        String apiEndPoint = "http://openapi.epis.or.kr/openapi/service/RltmAucBrknewsService/getPrdlstRltmAucBrknewsList?"+
-                "serviceKey=dzuiZZbhGGhdYgcvkdDPwvCHAdzZ%2FEkmO0%2BAqtpTaXsZLox1We%2BTJtegsxRak6NRX6gcVpEwrhGKayRbrDfjAQ%3D%3D";
-
-        try{
-
-            //result.append("<xml>\n");
-
-            for(String object : objects) {
-                apiEndPoint = apiEndPoint + "&dates=" + now + "&lcode=" + object;
-
-                System.out.println(apiEndPoint+"\n");
-
-                URL url = new URL(apiEndPoint);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),"UTF-8"));
-
-                String resultLine;
-
-                while((resultLine = br.readLine()) != null){
-                    result.append(resultLine+"\n");
-                }
-
-                urlConnection.disconnect();
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return result+"\n";
-    }
 }
