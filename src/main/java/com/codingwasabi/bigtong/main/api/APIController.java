@@ -20,7 +20,7 @@ public class APIController {
     private final APISerivce apiSerivce;
 
     // GRAIN,FRUIT,VEGETABLE,MEAT,FISH
-    private String[] GRAIN = {"01","02","03","04","05"};
+    private String[] GRAIN = {"01","03","04","05"};
     private String[] FRUIT = {"06","09"};
     private String[] VEGETABLE = {"10","11","12"};
     private String[] MEAT = {"41","43"};
