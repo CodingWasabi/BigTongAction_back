@@ -23,7 +23,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
-    private Map<String, WebSocketSession> sessions;
+    private Map<String, WebSocketSession> sessions = new HashMap<>();
 
     // connection 이 연결 되었을때, client의 연결이 성공했을때
     @Override

@@ -42,6 +42,10 @@ public class ChatRoom {
             chatMessage.remove();
 
         }
+
+        else if (chatMessage.getType().equals(MessageType.UPDATE)){
+
+        }
         sendMessage(chatMessage,chatService);
 
         return sessions.size();
