@@ -66,11 +66,6 @@ public class APISerivce {
         // restTemplate 기본 인코딩을 UTF-8 로 바꿔줌
         restTemplate.getMessageConverters().add(0,new StringHttpMessageConverter(Charset.forName("UTF-8")));
 
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_XML);
-        HttpEntity entity = new HttpEntity<>(headers);
-
         //log.info("try to get XML :  " + url );
         String response = restTemplate.getForObject(url,String.class);
         //log.info("finish get " + response);
