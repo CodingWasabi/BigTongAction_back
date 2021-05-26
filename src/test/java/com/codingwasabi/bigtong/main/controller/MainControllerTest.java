@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,8 +22,8 @@ class MainControllerTest extends userTestFactory {
         // beforeEach()
 
         // when
-        userRepository.save(user1);
-        userRepository.save(user2);
+        userRepository.save(account1);
+        userRepository.save(account2);
 
         // then
         this.mockMvc.perform(post("/main").param("nickname","test"))

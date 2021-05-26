@@ -1,16 +1,14 @@
 package com.codingwasabi.bigtong.main.api;
 
+import com.codingwasabi.bigtong.main.dto.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/object")
@@ -29,7 +27,7 @@ public class APIController {
 
     // 잡곡류
     @GetMapping("/grain")
-    public String callGrainApi(){
+    public List<Item> callGrainApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
         return apiSerivce.apiEndPoint(now,GRAIN);
@@ -37,7 +35,7 @@ public class APIController {
 
     // 과일류
     @GetMapping("/fruit")
-    public String callFruitApi(){
+    public List<Item> callFruitApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
         return apiSerivce.apiEndPoint(now,FRUIT);
@@ -45,7 +43,7 @@ public class APIController {
 
     // 채소류
     @GetMapping("/vegetable")
-    public String callVegetableApi(){
+    public List<Item> callVegetableApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
         return apiSerivce.apiEndPoint(now,VEGETABLE);
@@ -53,7 +51,7 @@ public class APIController {
 
     // 육류
     @GetMapping("/meat")
-    public String callMeatApi(){
+    public List<Item> callMeatApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
         return apiSerivce.apiEndPoint(now,MEAT);
@@ -61,7 +59,7 @@ public class APIController {
 
     // 생선류
     @GetMapping("/fish")
-    public String callFishApi(){
+    public List<Item> callFishApi(){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
         return apiSerivce.apiEndPoint(now,FISH);

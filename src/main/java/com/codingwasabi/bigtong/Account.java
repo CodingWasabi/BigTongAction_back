@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "nickname_table")
-public class User {
+public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -22,7 +22,7 @@ public class User {
 
 
     @Builder
-    User(String nickname){
+    Account(String nickname){
         this.nickname = nickname;
     }
 }

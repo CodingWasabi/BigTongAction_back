@@ -1,12 +1,9 @@
 package com.codingwasabi.bigtong.main.service;
 
-import com.codingwasabi.bigtong.User;
+import com.codingwasabi.bigtong.Account;
 import com.codingwasabi.bigtong.main.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MainService {
@@ -15,12 +12,12 @@ public class MainService {
     UserRepository userRepository;
 
     public boolean checkNickname(String nickname){
-        User user= userRepository.findByNickname("name").orElse(null);
-        if(user == null){
-            user = User.builder()
+        Account account = userRepository.findByNickname("name").orElse(null);
+        if(account == null){
+            account = Account.builder()
                     .nickname(nickname)
                     .build();
-            userRepository.save(user);
+            userRepository.save(account);
 
             return true;
         }

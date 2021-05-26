@@ -1,6 +1,6 @@
 package com.codingwasabi.bigtong.admin.controller;
 
-import com.codingwasabi.bigtong.User;
+import com.codingwasabi.bigtong.Account;
 import com.codingwasabi.bigtong.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/connecting")
-    public List<User> showConnectiongUser(){
+    public List<Account> showConnectiongUser(){
         return adminService.userConnecting();
     }
 }

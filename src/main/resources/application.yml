@@ -7,12 +7,11 @@ spring:
       hibernate:
         format_sql: true
 
-
   datasource:
-    url: jdbc:postgresql://codingwasabi-relay-db.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com:5432/postgres
-    username: 
-    password: 
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://gogogo.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com/bigtong
+    username: admin
+    password: 1q2w3e4r!
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 logging:
   level:

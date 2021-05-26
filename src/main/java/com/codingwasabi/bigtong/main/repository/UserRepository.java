@@ -1,14 +1,14 @@
 package com.codingwasabi.bigtong.main.repository;
 
-import com.codingwasabi.bigtong.User;
+import com.codingwasabi.bigtong.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<Account,Long> {
 
-    List<User> findAll();
+    List<Account> findAll();
 
-    Optional<User> findByNickname(String nickname);
+    Optional<Account> findByNickname(String nickname);
 }
