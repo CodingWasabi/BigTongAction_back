@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: jdbc:mysql://gogogo.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com/bigtong
+    username: admin
+    password: 1q2w3e4r!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  level:
+    org.hibernate.SQL: debug
