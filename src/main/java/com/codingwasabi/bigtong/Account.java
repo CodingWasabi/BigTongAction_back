@@ -1,16 +1,23 @@
 package com.codingwasabi.bigtong;
 
+import com.codingwasabi.bigtong.admin.entity.ChatRoom;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "nickname_table")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column
@@ -20,9 +27,21 @@ public class Account {
     @Column
     private LocalDateTime created;
 
+    @ManyToOne
+    @JoinColumn(name="chatRoom_id")
+    private ChatRoom chatRoom;
+
+    @Column
+    private String sessionId;
 
     @Builder
     Account(String nickname){
         this.nickname = nickname;
     }
+
+    @Transactional
+    public void insertSession(String sessionId){
+        this.sessionId = sessionId;
+    }
+
 }

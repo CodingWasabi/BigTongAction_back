@@ -1,7 +1,7 @@
 package com.codingwasabi.bigtong.admin.service;
 
 import com.codingwasabi.bigtong.Account;
-import com.codingwasabi.bigtong.main.repository.UserRepository;
+import com.codingwasabi.bigtong.main.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +12,10 @@ import java.util.List;
 public class AdminService {
 
     @Autowired
-    UserRepository userRepository;
+    AccountRepository accountRepository;
 
     @Transactional
     public List<Account> userConnecting(){
-        return userRepository.findAll();
+        return accountRepository.findAll();
     }
 }

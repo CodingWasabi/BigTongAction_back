@@ -1,34 +1,39 @@
-package com.codingwasabi.bigtong;
+package com.codingwasabi.bigtong.admin.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.codingwasabi.bigtong.Account;
+import com.codingwasabi.bigtong.websocket.ChatService;
+import com.codingwasabi.bigtong.websocket.model.message.ChatMessage;
+import com.codingwasabi.bigtong.websocket.model.message.MessageType;
+import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
+@Entity
+@Builder
+@AllArgsConstructor
 public class ChatRoom {
 
-    private Long roomId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column
     private String name;
-    private Set<WebSocketSession> sessions = new HashSet<>();
 
-    @Builder
-    public ChatRoom(Long roomId, String name){
-        this.roomId = roomId;
-        this.name = name;
-    }
+    // fetch 설정 필요
+    @OneToMany(mappedBy = "chatRoom")
+    private List<Account> accountList;
 
-    public int leftPeople(){
-        return sessions.size();
-    }
 
+
+/*
     @Transactional
-    public int handleActions(WebSocketSession session, ChatMessage chatMessage,ChatService chatService){
+    public int handleActions(WebSocketSession session, ChatMessage chatMessage, ChatService chatService){
 
         if(chatMessage.getType().equals(MessageType.ENTER)){
             sessions.add(session);
@@ -43,22 +48,14 @@ public class ChatRoom {
 
         }
 
-        else if (chatMessage.getType().equals(MessageType.UPDATE)){
-
-        }
         sendMessage(chatMessage,chatService);
 
         return sessions.size();
     }
+*/
 
-    @Transactional
-    public int endAbnormal(WebSocketSession session){
-        sessions.remove(session);
-
-        return sessions.size();
-    }
-
+/*
     public <T> void sendMessage(T message, ChatService chatService){
         sessions.parallelStream().forEach(session -> chatService.sendMessage(session,message));
-    }
+    }*/
 }

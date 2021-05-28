@@ -1,5 +1,6 @@
-package com.codingwasabi.bigtong;
+package com.codingwasabi.bigtong.websocket;
 
+import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.*;
 public class ChatService {
 
     private final ObjectMapper objectMapper;
-    private Map<Long,ChatRoom> chatRooms;
+    private Map<Long, ChatRoom> chatRooms;
     @PostConstruct
     private void init(){
         chatRooms = new LinkedHashMap<>();
@@ -31,19 +32,6 @@ public class ChatService {
 
     public ChatRoom findRoomById(Long roomId){
         return chatRooms.get(roomId);
-    }
-
-    public ChatRoom createChatRoom(String name){
-        Long randomId= (long)chatRooms.size()+1;
-
-        ChatRoom chatRoom = ChatRoom.builder()
-                .roomId(randomId)
-                .name(name)
-                .build();
-
-        chatRooms.put(randomId,chatRoom);
-
-        return chatRoom;
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {

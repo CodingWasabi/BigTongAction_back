@@ -6,6 +6,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
   datasource:
     url: jdbc:mysql://gogogo.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com/bigtong
