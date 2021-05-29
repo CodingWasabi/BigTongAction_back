@@ -15,17 +15,14 @@ public class ChatMessage {
 
     private MessageType type ;
 
-    private Long roomId;
-
     private String sender;
 
     private String message;
 
-    private int leftPeople;
-
-    //
-
+    // ENTER 할때 필요
     private RoomType roomType;
+
+    // 밑은 알람을 위한 field 값들, 다른 객체로 빼줄 에정
 
     private String objectName;
 
@@ -33,14 +30,5 @@ public class ChatMessage {
 
     private LocalDateTime created;
 
-    //
-
-    public void insert(){
-        this.leftPeople++;
-    }
-
-    public void remove(){
-        this.leftPeople--;
-    }
 
 }

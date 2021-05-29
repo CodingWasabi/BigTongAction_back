@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/main")
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;

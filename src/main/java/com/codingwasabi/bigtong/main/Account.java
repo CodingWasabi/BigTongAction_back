@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -34,14 +34,22 @@ public class Account {
     @Column
     private String sessionId;
 
+    @Column
+    private String sessionIp;
+
     @Builder
     Account(String nickname){
         this.nickname = nickname;
     }
 
     @Transactional
-    public void insertSession(String sessionId){
+    public void insertSession(String sessionId,String ip){
+
         this.sessionId = sessionId;
+        this.sessionIp = ip;
     }
 
+    public void enterRoom(ChatRoom chatRoom){
+        this.chatRoom = chatRoom;
+    }
 }
