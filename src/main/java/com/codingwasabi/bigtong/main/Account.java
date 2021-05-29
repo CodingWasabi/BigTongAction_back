@@ -1,4 +1,4 @@
-package com.codingwasabi.bigtong;
+package com.codingwasabi.bigtong.main;
 
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import lombok.AllArgsConstructor;

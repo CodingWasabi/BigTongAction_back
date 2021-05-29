@@ -1,6 +1,6 @@
 package com.codingwasabi.bigtong.admin.controller;
 
-import com.codingwasabi.bigtong.Account;
+import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

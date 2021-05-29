@@ -1,6 +1,6 @@
 package com.codingwasabi.bigtong.common;
 
-import com.codingwasabi.bigtong.Account;
+import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

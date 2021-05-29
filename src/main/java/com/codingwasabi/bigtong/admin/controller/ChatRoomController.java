@@ -1,7 +1,6 @@
 package com.codingwasabi.bigtong.admin.controller;
 
 import com.codingwasabi.bigtong.admin.service.ChatRoomService;
-import com.codingwasabi.bigtong.websocket.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

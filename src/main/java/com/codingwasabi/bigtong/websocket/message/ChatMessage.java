@@ -1,4 +1,4 @@
-package com.codingwasabi.bigtong.websocket.model.message;
+package com.codingwasabi.bigtong.websocket.message;
 
 import com.codingwasabi.bigtong.admin.entity.RoomType;
 import lombok.Builder;
