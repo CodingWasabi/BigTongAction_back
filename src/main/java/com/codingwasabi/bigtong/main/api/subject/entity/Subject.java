@@ -1,22 +1,25 @@
 package com.codingwasabi.bigtong.main.api.subject.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class Subject {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
 
     @Column
-    private String bidtime;
+    protected String bidtime;
 
     @Column
-    private String mclassname;
+    protected String mclassname;
 
     @Column
-    private String price;
+    protected String price;
 
     @Column
-    private String unitname;
+    protected String unitname;
 }

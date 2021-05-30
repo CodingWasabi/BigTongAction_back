@@ -1,5 +1,6 @@
 package com.codingwasabi.bigtong.main.api;
 
+import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
 import com.codingwasabi.bigtong.main.dto.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +28,8 @@ public class APIController {
 
     // 잡곡류
     @GetMapping("/grain")
-    public List<Item> callGrainApi(){
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return apiSerivce.apiEndPoint(now,GRAIN);
+    public List<Subject> callGrainApi(){
+        return apiSerivce.manageSubject(GRAIN,"GRAIN");
     }
 
     // 과일류
