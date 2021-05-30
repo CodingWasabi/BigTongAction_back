@@ -27,7 +27,7 @@ public class Account {
     @Column
     private LocalDateTime created;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="chatRoom_id")
     private ChatRoom chatRoom;
 
