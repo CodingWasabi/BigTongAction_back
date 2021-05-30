@@ -3,6 +3,7 @@ package com.codingwasabi.bigtong.websocket.handler;
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
+import com.codingwasabi.bigtong.main.service.AccountService;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+    private final AccountService accountService;
+    private String name;
 
     // account 와 websocketsession을 mapping 시킴
     private Map<String,WebSocketSession> webSocketSessionMap = new HashMap<>();
@@ -72,11 +75,23 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         //chatRoom.handleActions(session,chatMessage,chatService);
     }
 
-    // connection이 close 되었을 때
+    // connection이 close 되었을 때 , 비정상 종료
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info("connection END, "+session.getLocalAddress());
-        // List<ChatRoom> chatRoomList = chatService.findAllRoom();
+
+        // 접속된 session들에 대해
+        webSocketSessionMap.forEach((nickname,webSocketSession)->{
+            log.info("session for each test : " +webSocketSession.getId());
+
+            // 종료된 session과 같다면 계정 정보 삭제
+            if(webSocketSession == session) {
+                accountService.deleteAccount(nickname,webSocketSessionMap);
+                name= nickname;
+            }
+
+        });
+
+        webSocketSessionMap.remove(name);
 
     }
 }

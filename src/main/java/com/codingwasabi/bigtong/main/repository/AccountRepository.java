@@ -16,4 +16,5 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
 
     List<Account> findAllByChatRoomId(Long id);
 
+    void deleteAccountByNickname(String nickname);
 }

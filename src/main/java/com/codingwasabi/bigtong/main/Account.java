@@ -27,7 +27,7 @@ public class Account {
     @Column
     private LocalDateTime created;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="chatRoom_id")
     private ChatRoom chatRoom;
 
@@ -51,5 +51,11 @@ public class Account {
 
     public void enterRoom(ChatRoom chatRoom){
         this.chatRoom = chatRoom;
+    }
+
+    public void exitRoom(){
+        this.sessionId = null;
+        this.sessionIp = null;
+        this.chatRoom = null;
     }
 }
