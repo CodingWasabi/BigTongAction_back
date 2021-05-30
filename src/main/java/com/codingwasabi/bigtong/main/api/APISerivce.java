@@ -74,7 +74,7 @@ public class APISerivce {
 
         if(subject.equals("GRAIN")){
             Grain grain = grainRepository.findFirstByOrderByBidtimeDesc()
-                    .orElseThrow(NoPreviousDataInTable::new);;
+                    .orElse(new Grain());
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
@@ -99,7 +99,7 @@ public class APISerivce {
         else if (subject.equals("FISH")){
 
             Fish fish = fishRepository.findFirstByOrderByBidtimeDesc()
-                    .orElseThrow(NoPreviousDataInTable::new);
+                    .orElse(new Fish());
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
@@ -124,7 +124,7 @@ public class APISerivce {
         else if (subject.equals("FRUIT")){
 
             Fruit fruit = fruitRepository.findFirstByOrderByBidtimeDesc()
-                    .orElseThrow(NoPreviousDataInTable::new);;
+                    .orElse(new Fruit());
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
@@ -151,7 +151,7 @@ public class APISerivce {
         else if (subject.equals("VEGETABLE")){
 
             Vegetable vegetable = vegetableRepository.findFirstByOrderByBidtimeDesc()
-                    .orElseThrow(NoPreviousDataInTable::new);;
+                    .orElse(new Vegetable());
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
@@ -178,7 +178,7 @@ public class APISerivce {
 
 
             Meat meat = meatRepository.findFirstByOrderByBidtimeDesc()
-                    .orElseThrow(NoPreviousDataInTable::new);;
+                    .orElse(new Meat());
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 

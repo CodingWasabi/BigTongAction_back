@@ -97,6 +97,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_grain(){
 
+        log.info("update grain in ");
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject grain = apiSerivce.manageSubject(GRAIN,"GRAIN");
 
