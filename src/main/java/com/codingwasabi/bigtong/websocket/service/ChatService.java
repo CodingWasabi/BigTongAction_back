@@ -106,10 +106,14 @@ public class ChatService {
         List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId())
                 .orElseThrow(AccountNotExistException::new);
 
+        log.info("GRAIN null / chatRoom : " + chatRoom.getType());
+        log.info("GRAIN null / accountList : "+ accountList.size());
+
             for(Account account : accountList){
                 // 각 Account 별 websocketSession 정보 조회
                 // error 이거나
                 WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
+                log.info("GRAIN null / send who? " + account.getNickname());
 
                 // 해당 webSocketSession에 메시지 전송
                 try{

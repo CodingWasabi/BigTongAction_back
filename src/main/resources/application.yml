@@ -1,11 +1,11 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
-    properties:
-      hibernate:
-        format_sql: true
+    #properties:
+      #hibernate:
+        #format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
@@ -15,6 +15,6 @@ spring:
     password: 1q2w3e4r!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-logging:
-  level:
-    org.hibernate.SQL: debug
+#logging:
+  #level:
+    #org.hibernate.SQL: debug

@@ -1,8 +1,11 @@
 package com.codingwasabi.bigtong.main.api.subject.entity;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 public class Vegetable extends Subject{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

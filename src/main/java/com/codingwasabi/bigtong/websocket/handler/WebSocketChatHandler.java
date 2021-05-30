@@ -93,8 +93,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     }
 
-    // 30초 마다 실행 test
-    @Scheduled(fixedDelay = 30* 1000)
+    // 60초 마다 실행 test
+    @Scheduled(fixedDelay = 60* 1000)
     public void renewList_grain(){
 
         // 업데이트가 되었다면 ws 로 데이터 전송
@@ -111,6 +111,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
         }
         else{
+            log.info("GRAIN null 진입");
             UpdateMessage updateMessage = UpdateMessage.builder()
                     .mclassname("did not update")
                     .roomType(RoomType.GRAIN)
@@ -120,8 +121,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         }
     }
 
-    // 30초 마다 실행 test
-    @Scheduled(fixedDelay = 30* 1000)
+    // 60초 마다 실행 test
+    @Scheduled(fixedDelay = 60* 1000)
     public void renewList_fruit(){
 
         // 업데이트가 되었다면 ws 로 데이터 전송
@@ -147,8 +148,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         }
     }
 
-    // 30초 마다 실행 test
-    @Scheduled(fixedDelay = 30* 1000)
+    // 60초 마다 실행 test
+    @Scheduled(fixedDelay = 60* 1000)
     public void renewList_fish(){
 
         // 업데이트가 되었다면 ws 로 데이터 전송
@@ -174,8 +175,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         }
     }
 
-    // 30초 마다 실행 test
-    @Scheduled(fixedDelay = 30* 1000)
+    // 60초 마다 실행 test
+    @Scheduled(fixedDelay = 60* 1000)
     public void renewList_vegetable(){
 
         // 업데이트가 되었다면 ws 로 데이터 전송
@@ -201,8 +202,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         }
     }
 
-    // 30초 마다 실행 test
-    @Scheduled(fixedDelay = 30* 1000)
+    // 60초 마다 실행 test
+    @Scheduled(fixedDelay = 60* 1000)
     public void renewList_meat(){
 
         // 업데이트가 되었다면 ws 로 데이터 전송

@@ -5,9 +5,10 @@ import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MeatRepository extends JpaRepository<Meat,Long> {
     List<Subject> findTop5ByOrderByBidtimeDesc();
 
-    Meat findTop1ByOrderByBidtimeDesc();
+    Optional<Meat> findFirstByOrderByBidtimeDesc();
 }

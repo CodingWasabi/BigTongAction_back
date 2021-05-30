@@ -1,8 +1,11 @@
 package com.codingwasabi.bigtong.main.api.subject.entity;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 public class Fish extends Subject{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

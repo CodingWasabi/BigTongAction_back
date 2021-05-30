@@ -1,6 +1,7 @@
 package com.codingwasabi.bigtong.main.api;
 
 import com.codingwasabi.bigtong.main.api.subject.entity.*;
+import com.codingwasabi.bigtong.main.api.subject.exception.NoPreviousDataInTable;
 import com.codingwasabi.bigtong.main.api.subject.repository.*;
 import com.codingwasabi.bigtong.main.dto.Item;
 import com.codingwasabi.bigtong.main.dto.Response;
@@ -53,16 +54,16 @@ public class APISerivce {
         return null;
     }
 
-    private boolean checkUpdated(Item item, Subject subject){
-        if(subject == null)
-            return true;
+    private boolean checkUpdated(Subject item, Subject subject){
+        if(item == null)
+            return false;
 
-        else if(!item.mclassname.equals(subject.getMclassname())
-                || !item.bidtime.equals(subject.getBidtime())
-                || !item.price.equals(subject.getPrice()))
-            return true;
+        else if(item.getMclassname().equals(subject.getMclassname())
+                && item.getBidtime().equals(subject.getBidtime())
+                && item.getPrice().equals(subject.getPrice()))
+            return false;
 
-        return false;
+        return true;
 
     }
 
@@ -72,13 +73,13 @@ public class APISerivce {
 
 
         if(subject.equals("GRAIN")){
-            Grain grain = grainRepository.findTop1ByOrderByBidtimeDesc();
+            Grain grain = grainRepository.findFirstByOrderByBidtimeDesc()
+                    .orElseThrow(NoPreviousDataInTable::new);;
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
-            // update 가 되었다면
+
             if(!itemList.isEmpty()) {
-                if (checkUpdated(itemList.get(0), grain)) {
 
                     int index = 0;
                     for (Item item : itemList) {
@@ -88,33 +89,33 @@ public class APISerivce {
                         Grain new_grain = new Grain(item.bidtime, item.mclassname, item.price, item.unitname);
                         grainRepository.save(new_grain);
                     }
-                }
-                return grain;
+                    // update 가 되었다면
+                    if( checkUpdated(grain,grainRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
+                        return grain;
             }
         }
 
 
         else if (subject.equals("FISH")){
 
-            Fish fish = fishRepository.findTop1ByOrderByBidtimeDesc();
+            Fish fish = fishRepository.findFirstByOrderByBidtimeDesc()
+                    .orElseThrow(NoPreviousDataInTable::new);
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
-                if (checkUpdated(itemList.get(0), fish)) {
-
                     int index = 0;
                     for (Item item : itemList) {
                         if (index > 5)
                             break;
                         index++;
                         Fish new_fish = new Fish(item.bidtime, item.mclassname, item.price, item.unitname);
-                        log.info("new_grain 이름 : " + new_fish.getMclassname());
                         fishRepository.save(new_fish);
                     }
-                }
-                return fish;
+
+                    if( checkUpdated(fish,fishRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
+                        return fish;
             }
 
         }
@@ -122,13 +123,13 @@ public class APISerivce {
 
         else if (subject.equals("FRUIT")){
 
-            Fruit fruit = fruitRepository.findTop1ByOrderByBidtimeDesc();
+            Fruit fruit = fruitRepository.findFirstByOrderByBidtimeDesc()
+                    .orElseThrow(NoPreviousDataInTable::new);;
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
-                if (checkUpdated(itemList.get(0), fruit)) {
 
                     int index = 0;
                     for (Item item : itemList) {
@@ -136,11 +137,12 @@ public class APISerivce {
                             break;
                         index++;
                         Fruit new_fruit = new Fruit(item.bidtime, item.mclassname, item.price, item.unitname);
-                        log.info("new_grain 이름 : " + new_fruit.getMclassname());
                         fruitRepository.save(new_fruit);
                     }
-                }
-                return fruit;
+                    if(checkUpdated(fruit,fruitRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
+                        return fruit;
+
+
             }
 
         }
@@ -148,13 +150,13 @@ public class APISerivce {
 
         else if (subject.equals("VEGETABLE")){
 
-            Vegetable vegetable = vegetableRepository.findTop1ByOrderByBidtimeDesc();
+            Vegetable vegetable = vegetableRepository.findFirstByOrderByBidtimeDesc()
+                    .orElseThrow(NoPreviousDataInTable::new);;
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
-                if (checkUpdated(itemList.get(0), vegetable)) {
 
                     int index = 0;
                     for (Item item : itemList) {
@@ -162,25 +164,26 @@ public class APISerivce {
                             break;
                         index++;
                         Vegetable new_vegetable = new Vegetable(item.bidtime, item.mclassname, item.price, item.unitname);
-                        log.info("new_grain 이름 : " + new_vegetable.getMclassname());
                         vegetableRepository.save(new_vegetable);
                     }
-                }
-                return vegetable;
+                    if(checkUpdated(vegetable,vegetableRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
+                        return vegetable;
+
+
             }
 
 
         }
-        else {
+        else if(subject.equals("MEAT")){
 
 
-            Meat meat = meatRepository.findTop1ByOrderByBidtimeDesc();
+            Meat meat = meatRepository.findFirstByOrderByBidtimeDesc()
+                    .orElseThrow(NoPreviousDataInTable::new);;
 
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
-                if (checkUpdated(itemList.get(0), meat)) {
 
                     int index = 0;
                     for (Item item : itemList) {
@@ -188,11 +191,12 @@ public class APISerivce {
                             break;
                         index++;
                         Meat new_meat = new Meat(item.bidtime, item.mclassname, item.price, item.unitname);
-                        log.info("new_grain 이름 : " + new_meat.getMclassname());
                         meatRepository.save(new_meat);
                     }
-                }
-                return meat;
+                    if(checkUpdated(meat,meatRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
+                        return meat;
+
+
             }
 
         }
@@ -212,8 +216,9 @@ public class APISerivce {
                         "serviceKey=dzuiZZbhGGhdYgcvkdDPwvCHAdzZ%2FEkmO0%2BAqtpTaXsZLox1We%2BTJtegsxRak6NRX6gcVpEwrhGKayRbrDfjAQ%3D%3D";
 
                 log.info(object+" 들어옴");
-                apiEndPoint = apiEndPoint + "&dates="+ now + "&lcode=" + object +"&numOfRows=2";
-
+                // apiEndPoint = apiEndPoint + "&dates="+ now + "&lcode=" + object +"&numOfRows=2";
+                // 임시로
+                apiEndPoint = apiEndPoint + "&dates=20210528" + "&lcode=" + object +"&numOfRows=2";
                 Response response = parser(get(apiEndPoint));
 
                 // item들이 비어 있지 않으면 add
@@ -266,10 +271,10 @@ public class APISerivce {
 
 
     private String get(String url){
-        // time out 10초 설정
+        // time out 5초 설정
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(10 * 1000);
-        factory.setReadTimeout(10* 1000);
+        factory.setConnectTimeout(5 * 1000);
+        factory.setReadTimeout(5* 1000);
 
         RestTemplate restTemplate = new RestTemplate(factory);
 
