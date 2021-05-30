@@ -17,7 +17,8 @@ import java.util.List;
 public class APIController {
 
     private final APISerivce apiSerivce;
-        // 잡곡류
+
+    // 잡곡류
     @GetMapping("/grain")
     public List<Subject> callGrainApi(){
         return apiSerivce.returnTop5("GRAIN");

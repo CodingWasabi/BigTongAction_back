@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MeatRepository extends JpaRepository<Meat,Long> {
     List<Subject> findTop5ByOrderByBidtimeDesc();
+
+    Meat findTop1ByOrderByBidtimeDesc();
 }

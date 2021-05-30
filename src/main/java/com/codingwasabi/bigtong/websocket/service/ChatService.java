@@ -111,8 +111,6 @@ public class ChatService {
                 // error 이거나
                 WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
 
-                log.info("send all , session info : "+webSocketSession.getId());
-
                 // 해당 webSocketSession에 메시지 전송
                 try{
                     webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(updateMessage)));

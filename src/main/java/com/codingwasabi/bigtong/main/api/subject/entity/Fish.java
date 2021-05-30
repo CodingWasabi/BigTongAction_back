@@ -8,4 +8,10 @@ public class Fish extends Subject{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Fish(String bidtime,String mclassname, String price, String unitname){
+        this.bidtime = bidtime;
+        this.mclassname = mclassname;
+        this.price = price;
+        this.unitname = unitname;
+    }
 }

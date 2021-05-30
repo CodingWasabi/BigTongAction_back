@@ -1,7 +1,6 @@
 package com.codingwasabi.bigtong.main.api;
 
-import com.codingwasabi.bigtong.main.api.subject.entity.Grain;
-import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
+import com.codingwasabi.bigtong.main.api.subject.entity.*;
 import com.codingwasabi.bigtong.main.api.subject.repository.*;
 import com.codingwasabi.bigtong.main.dto.Item;
 import com.codingwasabi.bigtong.main.dto.Response;
@@ -80,15 +79,13 @@ public class APISerivce {
             // update 가 되었다면
             if(!itemList.isEmpty()) {
                 if (checkUpdated(itemList.get(0), grain)) {
-                    log.info("itemList size : " + itemList.size());
 
                     int index = 0;
                     for (Item item : itemList) {
-                        if (index > 4)
+                        if (index > 5)
                             break;
                         index++;
                         Grain new_grain = new Grain(item.bidtime, item.mclassname, item.price, item.unitname);
-                        log.info("new_grain 이름 : " + new_grain.getMclassname());
                         grainRepository.save(new_grain);
                     }
                 }
@@ -99,14 +96,104 @@ public class APISerivce {
 
         else if (subject.equals("FISH")){
 
-        }
-        else if (subject.equals("FRUIT")){
+            Fish fish = fishRepository.findTop1ByOrderByBidtimeDesc();
+
+            List<Item> itemList = apiEndPoint(now,subjectNum);
+
+            // update 가 되었다면
+            if(!itemList.isEmpty()) {
+                if (checkUpdated(itemList.get(0), fish)) {
+
+                    int index = 0;
+                    for (Item item : itemList) {
+                        if (index > 5)
+                            break;
+                        index++;
+                        Fish new_fish = new Fish(item.bidtime, item.mclassname, item.price, item.unitname);
+                        log.info("new_grain 이름 : " + new_fish.getMclassname());
+                        fishRepository.save(new_fish);
+                    }
+                }
+                return fish;
+            }
 
         }
+
+
+        else if (subject.equals("FRUIT")){
+
+            Fruit fruit = fruitRepository.findTop1ByOrderByBidtimeDesc();
+
+            List<Item> itemList = apiEndPoint(now,subjectNum);
+
+            // update 가 되었다면
+            if(!itemList.isEmpty()) {
+                if (checkUpdated(itemList.get(0), fruit)) {
+
+                    int index = 0;
+                    for (Item item : itemList) {
+                        if (index > 5)
+                            break;
+                        index++;
+                        Fruit new_fruit = new Fruit(item.bidtime, item.mclassname, item.price, item.unitname);
+                        log.info("new_grain 이름 : " + new_fruit.getMclassname());
+                        fruitRepository.save(new_fruit);
+                    }
+                }
+                return fruit;
+            }
+
+        }
+
+
         else if (subject.equals("VEGETABLE")){
+
+            Vegetable vegetable = vegetableRepository.findTop1ByOrderByBidtimeDesc();
+
+            List<Item> itemList = apiEndPoint(now,subjectNum);
+
+            // update 가 되었다면
+            if(!itemList.isEmpty()) {
+                if (checkUpdated(itemList.get(0), vegetable)) {
+
+                    int index = 0;
+                    for (Item item : itemList) {
+                        if (index > 5)
+                            break;
+                        index++;
+                        Vegetable new_vegetable = new Vegetable(item.bidtime, item.mclassname, item.price, item.unitname);
+                        log.info("new_grain 이름 : " + new_vegetable.getMclassname());
+                        vegetableRepository.save(new_vegetable);
+                    }
+                }
+                return vegetable;
+            }
+
 
         }
         else {
+
+
+            Meat meat = meatRepository.findTop1ByOrderByBidtimeDesc();
+
+            List<Item> itemList = apiEndPoint(now,subjectNum);
+
+            // update 가 되었다면
+            if(!itemList.isEmpty()) {
+                if (checkUpdated(itemList.get(0), meat)) {
+
+                    int index = 0;
+                    for (Item item : itemList) {
+                        if (index > 5)
+                            break;
+                        index++;
+                        Meat new_meat = new Meat(item.bidtime, item.mclassname, item.price, item.unitname);
+                        log.info("new_grain 이름 : " + new_meat.getMclassname());
+                        meatRepository.save(new_meat);
+                    }
+                }
+                return meat;
+            }
 
         }
 

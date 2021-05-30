@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FruitRepository extends JpaRepository<Fruit,Long> {
     List<Subject> findTop5ByOrderByBidtimeDesc();
+
+    Fruit findTop1ByOrderByBidtimeDesc();
 }

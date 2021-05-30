@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FishRepository extends JpaRepository<Fish,Long> {
     List<Subject> findTop5ByOrderByBidtimeDesc();
+
+    Fish findTop1ByOrderByBidtimeDesc();
 }

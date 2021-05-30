@@ -95,8 +95,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     // 30초 마다 실행 test
     @Scheduled(fixedDelay = 30* 1000)
-    public void renewList(){
-        log.info("main : api scheduler : renew GRAIN");
+    public void renewList_grain(){
 
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject grain = apiSerivce.manageSubject(GRAIN,"GRAIN");
@@ -119,6 +118,113 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                     .build();
             chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
         }
+    }
 
+    // 30초 마다 실행 test
+    @Scheduled(fixedDelay = 30* 1000)
+    public void renewList_fruit(){
+
+        // 업데이트가 되었다면 ws 로 데이터 전송
+        Subject fruit = apiSerivce.manageSubject(FRUIT,"FRUIT");
+
+        if(fruit != null){
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .created(fruit.getBidtime())
+                    .mclassname(fruit.getMclassname())
+                    .price(fruit.getPrice())
+                    .roomType(RoomType.FRUIT)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+        else{
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .mclassname("did not update")
+                    .roomType(RoomType.FRUIT)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+    }
+
+    // 30초 마다 실행 test
+    @Scheduled(fixedDelay = 30* 1000)
+    public void renewList_fish(){
+
+        // 업데이트가 되었다면 ws 로 데이터 전송
+        Subject fish = apiSerivce.manageSubject(FISH,"FISH");
+
+        if(fish != null){
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .created(fish.getBidtime())
+                    .mclassname(fish.getMclassname())
+                    .price(fish.getPrice())
+                    .roomType(RoomType.FISH)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+        else{
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .mclassname("did not update")
+                    .roomType(RoomType.FISH)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+    }
+
+    // 30초 마다 실행 test
+    @Scheduled(fixedDelay = 30* 1000)
+    public void renewList_vegetable(){
+
+        // 업데이트가 되었다면 ws 로 데이터 전송
+        Subject vegetable = apiSerivce.manageSubject(VEGETABLE,"VEGETABLE");
+
+        if(vegetable != null){
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .created(vegetable.getBidtime())
+                    .mclassname(vegetable.getMclassname())
+                    .price(vegetable.getPrice())
+                    .roomType(RoomType.VEGETABLE)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+        else{
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .mclassname("did not update")
+                    .roomType(RoomType.VEGETABLE)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+    }
+
+    // 30초 마다 실행 test
+    @Scheduled(fixedDelay = 30* 1000)
+    public void renewList_meat(){
+
+        // 업데이트가 되었다면 ws 로 데이터 전송
+        Subject meat = apiSerivce.manageSubject(MEAT,"MEAT");
+
+        if(meat != null){
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .created(meat.getBidtime())
+                    .mclassname(meat.getMclassname())
+                    .price(meat.getPrice())
+                    .roomType(RoomType.MEAT)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+        else{
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .mclassname("did not update")
+                    .roomType(RoomType.MEAT)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
     }
 }
