@@ -1,14 +1,20 @@
 package com.codingwasabi.bigtong.websocket.handler;
 
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
+import com.codingwasabi.bigtong.admin.entity.RoomType;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
+import com.codingwasabi.bigtong.main.api.APISerivce;
+import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
 import com.codingwasabi.bigtong.main.service.AccountService;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
+import com.codingwasabi.bigtong.websocket.message.MessageType;
+import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -24,28 +30,20 @@ import java.util.Map;
 public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
+    private final APISerivce apiSerivce;
     private final ChatService chatService;
     private final AccountService accountService;
     private String name;
 
+    // GRAIN,FRUIT,VEGETABLE,MEAT,FISH
+    private final String[] GRAIN = {"01","03","04","05"};
+    private final String[] FRUIT = {"06","09"};
+    private final String[] VEGETABLE = {"10","11","12"};
+    private final String[] MEAT = {"41","43"};
+    private final String[] FISH = {"61","63"};
+
     // account 와 websocketsession을 mapping 시킴
     private Map<String,WebSocketSession> webSocketSessionMap = new HashMap<>();
-
-    /**
-     * WebSocket이 연결 되었을때
-     * @param session
-     * @throws Exception
-     */
-
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-        // test log
-        log.info("websocket : handler : afterConnectionEstablished : well done");
-        log.info("websocket info : " + session.getId());
-
-    }
-
 
     /**
      * Client 가 Server로 메시지를 보냈을 때
@@ -92,6 +90,35 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         });
 
         webSocketSessionMap.remove(name);
+
+    }
+
+    // 30초 마다 실행 test
+    @Scheduled(fixedDelay = 30* 1000)
+    public void renewList(){
+        log.info("main : api scheduler : renew GRAIN");
+
+        // 업데이트가 되었다면 ws 로 데이터 전송
+        Subject grain = apiSerivce.manageSubject(GRAIN,"GRAIN");
+
+        if(grain != null){
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .created(grain.getBidtime())
+                    .mclassname(grain.getMclassname())
+                    .price(grain.getPrice())
+                    .roomType(RoomType.GRAIN)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
+        else{
+            UpdateMessage updateMessage = UpdateMessage.builder()
+                    .mclassname("did not update")
+                    .roomType(RoomType.GRAIN)
+                    .messageType(MessageType.NOTICE)
+                    .build();
+            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
+        }
 
     }
 }

@@ -4,6 +4,7 @@ import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
+import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

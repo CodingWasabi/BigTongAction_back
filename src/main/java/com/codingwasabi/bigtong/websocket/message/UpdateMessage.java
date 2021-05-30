@@ -10,20 +10,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class ChatMessage{
+public class UpdateMessage {
+    private MessageType messageType;
 
-
-    private MessageType messageType ;
-
-    private String sender;
-
-    private String message;
-
-    // ENTER 할때 필요
     private RoomType roomType;
 
-    // 남은 인원수
-    private int leftPeople;
+    private String mclassname;
 
+    private String price;
+
+    private String created;
 
 }

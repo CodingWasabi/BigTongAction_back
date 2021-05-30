@@ -5,9 +5,12 @@ import com.codingwasabi.bigtong.admin.entity.RoomType;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
+import com.codingwasabi.bigtong.websocket.exception.AccountNotExistException;
+import com.codingwasabi.bigtong.websocket.exception.ChatRoomNotExistException;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
 import com.codingwasabi.bigtong.websocket.message.LeftPeople;
 import com.codingwasabi.bigtong.websocket.message.MessageType;
+import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +41,12 @@ public class ChatService {
         //test log
         log.info("websocket : chatService : message_in ");
 
-        MessageType messageType = chatMessage.getType();
+        MessageType messageType = chatMessage.getMessageType();
         RoomType roomType = chatMessage.getRoomType();
         String nickname = chatMessage.getSender();
 
         Account account = accountRepository.findAccountByNickname(nickname);
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(roomType);
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(roomType).orElseThrow(ChatRoomNotExistException::new);
 
         // chatMessage 의 Type을 구분
 
@@ -65,7 +68,8 @@ public class ChatService {
                     .message(account.getNickname()+"님이 입장하셨습니다.")
                     .sender("ADMIN")
                     .leftPeople(chatRoom.getAccountList().size())
-                    .type(MessageType.NOTICE)
+                    .roomType(account.getChatRoom().getType())
+                    .messageType(MessageType.TALK)
                     .build();
 
             // 해당 방에 입장 메시지 전송
@@ -96,6 +100,30 @@ public class ChatService {
         }
     }
 
+    public void noticeRoomPeople(UpdateMessage updateMessage,Map<String,WebSocketSession> webSocketSessionMap){
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(updateMessage.getRoomType()).orElseThrow(ChatRoomNotExistException::new);
+
+        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId())
+                .orElseThrow(AccountNotExistException::new);
+
+            for(Account account : accountList){
+                // 각 Account 별 websocketSession 정보 조회
+                // error 이거나
+                WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
+
+                log.info("send all , session info : "+webSocketSession.getId());
+
+                // 해당 webSocketSession에 메시지 전송
+                try{
+                    webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(updateMessage)));
+                }catch (IOException i){
+                    log.error(i.getMessage(),i);
+                }
+            }
+
+    }
+
+
     // Server -> Client
     // (Actually, Client -> Server -> Client)
     public void sendMessageAll(ChatMessage chatMessage,ChatRoom chatRoom,Map<String,WebSocketSession> webSocketSessionMap){
@@ -105,7 +133,8 @@ public class ChatService {
 
         // 해당 방에 접속된 모든 Account 리스트 생성
         // error 이거나
-        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId());
+        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId())
+                .orElseThrow(AccountNotExistException::new);;
 
         // 각 Account 에게 메시지 전송
         if(accountList.isEmpty())
@@ -146,7 +175,8 @@ public class ChatService {
 
         // 해당 방에 접속된 모든 Account 리스트 생성
         // error 이거나
-        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId());
+        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId())
+                .orElseThrow(AccountNotExistException::new);;
 
         // 각 Account 에게 메시지 전송
         if(accountList.isEmpty());

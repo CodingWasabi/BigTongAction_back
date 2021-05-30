@@ -1,9 +1,7 @@
 package com.codingwasabi.bigtong.main.api;
 
-import com.codingwasabi.bigtong.main.api.subject.entity.Fruit;
 import com.codingwasabi.bigtong.main.api.subject.entity.Grain;
 import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
-import com.codingwasabi.bigtong.main.api.subject.entity.Vegetable;
 import com.codingwasabi.bigtong.main.api.subject.repository.*;
 import com.codingwasabi.bigtong.main.dto.Item;
 import com.codingwasabi.bigtong.main.dto.Response;
@@ -13,17 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,6 +37,23 @@ public class APISerivce {
     private final VegetableRepository vegetableRepository;
     private final MeatRepository meatRepository;
 
+
+    // 데이터 베이스로 부터 최신 5개 불러오기
+    public List<Subject> returnTop5(String subject){
+        if(subject.equals("GRAIN"))
+            return grainRepository.findTop5ByOrderByBidtimeDesc();
+        else if (subject.equals("FRUIT"))
+            return fruitRepository.findTop5ByOrderByBidtimeDesc();
+        else if (subject.equals("FISH"))
+            return fishRepository.findTop5ByOrderByBidtimeDesc();
+        else if (subject.equals("VEGETABLE"))
+            return vegetableRepository.findTop5ByOrderByBidtimeDesc();
+        else if (subject.equals("MEAT"))
+            return meatRepository.findTop5ByOrderByBidtimeDesc();
+
+        return null;
+    }
+
     private boolean checkUpdated(Item item, Subject subject){
         if(subject == null)
             return true;
@@ -56,7 +67,8 @@ public class APISerivce {
 
     }
 
-    public List<Subject> manageSubject(String[] subjectNum,String subject ){
+    @Transactional
+    public Subject manageSubject(String[] subjectNum,String subject ){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
 
@@ -66,22 +78,22 @@ public class APISerivce {
             List<Item> itemList = apiEndPoint(now,subjectNum);
 
             // update 가 되었다면
-            if(!itemList.isEmpty())
-                if(checkUpdated(itemList.get(0),grain)){
+            if(!itemList.isEmpty()) {
+                if (checkUpdated(itemList.get(0), grain)) {
                     log.info("itemList size : " + itemList.size());
-                    grainRepository.deleteAll();
+
                     int index = 0;
-                    for(Item item : itemList){
-                        if(index>4)
+                    for (Item item : itemList) {
+                        if (index > 4)
                             break;
                         index++;
-                        Grain new_grain = new Grain(item.bidtime,item.mclassname,item.price,item.unitname);
+                        Grain new_grain = new Grain(item.bidtime, item.mclassname, item.price, item.unitname);
                         log.info("new_grain 이름 : " + new_grain.getMclassname());
                         grainRepository.save(new_grain);
                     }
                 }
-
-            return grainRepository.findTop5ByOrderByBidtimeDesc();
+                return grain;
+            }
         }
 
 
@@ -113,7 +125,7 @@ public class APISerivce {
                         "serviceKey=dzuiZZbhGGhdYgcvkdDPwvCHAdzZ%2FEkmO0%2BAqtpTaXsZLox1We%2BTJtegsxRak6NRX6gcVpEwrhGKayRbrDfjAQ%3D%3D";
 
                 log.info(object+" 들어옴");
-                apiEndPoint = apiEndPoint + "&dates=20210528" + "&lcode=" + object +"&numOfRows=2";
+                apiEndPoint = apiEndPoint + "&dates="+ now + "&lcode=" + object +"&numOfRows=2";
 
                 Response response = parser(get(apiEndPoint));
 
@@ -167,14 +179,28 @@ public class APISerivce {
 
 
     private String get(String url){
-        RestTemplate restTemplate = new RestTemplate();
+        // time out 10초 설정
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10 * 1000);
+        factory.setReadTimeout(10* 1000);
+
+        RestTemplate restTemplate = new RestTemplate(factory);
 
         // XML 한글 깨짐 방지
         // restTemplate 기본 인코딩을 UTF-8 로 바꿔줌
         restTemplate.getMessageConverters().add(0,new StringHttpMessageConverter(Charset.forName("UTF-8")));
 
+
+
         log.info("try to get XML :  " + url );
-        String response = restTemplate.getForObject(url,String.class);
+        String response = null;
+        try{
+        response = restTemplate.getForObject(url,String.class);
+        }catch (ResourceAccessException r){
+            log.error("timeout");
+        }catch (IllegalArgumentException i){
+            log.error("timeout");
+        }
         log.info("finish get " + response);
 
         return response;
