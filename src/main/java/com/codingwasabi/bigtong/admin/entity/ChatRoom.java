@@ -22,7 +22,7 @@ public class ChatRoom {
     private RoomType type;
 
     // fetch 설정 필요
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Account> accountList;
 
 }

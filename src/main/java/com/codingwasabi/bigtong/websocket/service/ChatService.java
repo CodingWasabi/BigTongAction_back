@@ -29,11 +29,10 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final AccountRepository accountRepository;
 
-    // account 와 websocketsession을 mapping 시킴
-    private Map<Account,WebSocketSession> webSocketSessionMap = new HashMap<>();
+
 
     @Transactional
-    public void message_in(WebSocketSession webSocketSession, ChatMessage chatMessage){
+    public void message_in(WebSocketSession webSocketSession, ChatMessage chatMessage,Map<String,WebSocketSession> webSocketSessionMap){
 
         //test log
         log.info("websocket : chatService : message_in ");
@@ -58,7 +57,7 @@ public class ChatService {
             account.enterRoom(chatRoom);
 
             // 해당 account 와 session 매핑
-            webSocketSessionMap.put(account,webSocketSession);
+            webSocketSessionMap.put(account.getNickname(),webSocketSession);
 
             ChatMessage message = ChatMessage.builder()
                     .message(account.getNickname()+"님이 입장하셨습니다.")
@@ -67,23 +66,24 @@ public class ChatService {
                     .build();
 
             // 해당 방에 입장 메시지 전송
-            sendMessageAll(message,chatRoom);
+            sendMessageAll(message,chatRoom,webSocketSessionMap);
         }
 
         // TALK 이거나 NOTICE 인 경우
         if(messageType == MessageType.TALK || messageType == MessageType.NOTICE)
-            sendMessageAll(chatMessage,chatRoom);
+            sendMessageAll(chatMessage,chatRoom,webSocketSessionMap);
 
     }
 
     // Server -> Client
     // (Actually, Client -> Server -> Client)
-    public void sendMessageAll(ChatMessage chatMessage,ChatRoom chatRoom){
+    public void sendMessageAll(ChatMessage chatMessage,ChatRoom chatRoom,Map<String,WebSocketSession> webSocketSessionMap){
 
         // test log
         log.info("websocket : chatService : sendMessageAll ");
 
         // 해당 방에 접속된 모든 Account 리스트 생성
+        // error 이거나
         List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId());
 
         // 각 Account 에게 메시지 전송
@@ -92,7 +92,8 @@ public class ChatService {
         else
         for(Account account : accountList){
             // 각 Account 별 websocketSession 정보 조회
-            WebSocketSession webSocketSession = webSocketSessionMap.get(account);
+            // error 이거나
+            WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
 
             log.info("send all , session info : "+webSocketSession.getId());
 

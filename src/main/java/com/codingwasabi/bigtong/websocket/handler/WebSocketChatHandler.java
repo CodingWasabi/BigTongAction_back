@@ -2,6 +2,7 @@ package com.codingwasabi.bigtong.websocket.handler;
 
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
+import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -20,6 +24,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+
+    // account 와 websocketsession을 mapping 시킴
+    private Map<String,WebSocketSession> webSocketSessionMap = new HashMap<>();
 
     /**
      * WebSocket이 연결 되었을때
@@ -52,7 +59,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         /**
          *   ( 1 ) 웹 소켓을 사용하여 Server가 메시지를 수신하는 방법
          */
-        chatService.message_in(session,chatMessage);
+        chatService.message_in(session,chatMessage,webSocketSessionMap);
 
 
         /**
