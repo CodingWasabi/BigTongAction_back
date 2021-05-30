@@ -54,13 +54,13 @@ public class APISerivce {
         return null;
     }
 
-    private boolean checkUpdated(Subject item, Subject subject){
+    private boolean checkUpdated(Item item, Subject subject){
         if(item == null)
             return false;
 
-        else if(item.getMclassname().equals(subject.getMclassname())
-                && item.getBidtime().equals(subject.getBidtime())
-                && item.getPrice().equals(subject.getPrice()))
+        else if(item.mclassname.equals(subject.getMclassname())
+                && item.bidtime.equals(subject.getBidtime())
+                && item.price.equals(subject.getPrice()))
             return false;
 
         return true;
@@ -81,6 +81,7 @@ public class APISerivce {
 
             if(!itemList.isEmpty()) {
 
+                if(checkUpdated(itemList.get(0),grain)) {
                     int index = 0;
                     for (Item item : itemList) {
                         if (index > 5)
@@ -89,9 +90,8 @@ public class APISerivce {
                         Grain new_grain = new Grain(item.bidtime, item.mclassname, item.price, item.unitname);
                         grainRepository.save(new_grain);
                     }
-                    // update 가 되었다면
-                    if( checkUpdated(grain,grainRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
-                        return grain;
+                    return grain;
+                }
             }
         }
 
@@ -105,6 +105,8 @@ public class APISerivce {
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
+
+                if(checkUpdated(itemList.get(0),fish)) {
                     int index = 0;
                     for (Item item : itemList) {
                         if (index > 5)
@@ -113,9 +115,10 @@ public class APISerivce {
                         Fish new_fish = new Fish(item.bidtime, item.mclassname, item.price, item.unitname);
                         fishRepository.save(new_fish);
                     }
+                    return fish;
+                }
 
-                    if( checkUpdated(fish,fishRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
-                        return fish;
+
             }
 
         }
@@ -131,6 +134,7 @@ public class APISerivce {
             // update 가 되었다면
             if(!itemList.isEmpty()) {
 
+                if(checkUpdated(itemList.get(0),fruit)) {
                     int index = 0;
                     for (Item item : itemList) {
                         if (index > 5)
@@ -139,10 +143,8 @@ public class APISerivce {
                         Fruit new_fruit = new Fruit(item.bidtime, item.mclassname, item.price, item.unitname);
                         fruitRepository.save(new_fruit);
                     }
-                    if(checkUpdated(fruit,fruitRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
-                        return fruit;
-
-
+                    return fruit;
+                }
             }
 
         }
@@ -158,6 +160,7 @@ public class APISerivce {
             // update 가 되었다면
             if(!itemList.isEmpty()) {
 
+                if(checkUpdated(itemList.get(0),vegetable)) {
                     int index = 0;
                     for (Item item : itemList) {
                         if (index > 5)
@@ -166,10 +169,9 @@ public class APISerivce {
                         Vegetable new_vegetable = new Vegetable(item.bidtime, item.mclassname, item.price, item.unitname);
                         vegetableRepository.save(new_vegetable);
                     }
-                    if(checkUpdated(vegetable,vegetableRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
-                        return vegetable;
 
-
+                    return vegetable;
+                }
             }
 
 
@@ -184,19 +186,17 @@ public class APISerivce {
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
-
-                    int index = 0;
-                    for (Item item : itemList) {
-                        if (index > 5)
-                            break;
-                        index++;
-                        Meat new_meat = new Meat(item.bidtime, item.mclassname, item.price, item.unitname);
-                        meatRepository.save(new_meat);
-                    }
-                    if(checkUpdated(meat,meatRepository.findFirstByOrderByBidtimeDesc().orElseThrow(NoPreviousDataInTable::new)))
+                    if(checkUpdated(itemList.get(0),meat)) {
+                        int index = 0;
+                        for (Item item : itemList) {
+                            if (index > 5)
+                                break;
+                            index++;
+                            Meat new_meat = new Meat(item.bidtime, item.mclassname, item.price, item.unitname);
+                            meatRepository.save(new_meat);
+                        }
                         return meat;
-
-
+                    }
             }
 
         }
