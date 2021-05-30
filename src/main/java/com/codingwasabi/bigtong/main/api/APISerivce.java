@@ -26,6 +26,11 @@ import java.util.List;
 @Slf4j
 public class APISerivce {
 
+    public void manageObject(String[] objectNum){
+
+
+    }
+
     public List<Item> apiEndPoint(String now, String[] objects){
         StringBuffer result = new StringBuffer();
         List<Item> objectItemList = new ArrayList<>();
@@ -42,7 +47,7 @@ public class APISerivce {
 
                 // item들이 비어 있지 않으면 add
                 if (! (response.body.items == null)) {
-                    for (Item item : (List<Item>) response.body.getItems())
+                    for (Item item : response.body.getItems())
                         objectItemList.add(item);
 
 
