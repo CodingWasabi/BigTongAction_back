@@ -19,8 +19,8 @@ class AdminControllerTest extends userTestFactory {
         // beforeEach()
 
         // when
-        userRepository.save(account1);
-        userRepository.save(account2);
+        accountRepository.save(account1);
+        accountRepository.save(account2);
 
         // then
         this.mockMvc.perform(get("/admin/connecting"))

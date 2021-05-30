@@ -1,5 +1,6 @@
 package com.codingwasabi.bigtong.main.api;
 
+import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
 import com.codingwasabi.bigtong.main.dto.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,52 +18,34 @@ public class APIController {
 
     private final APISerivce apiSerivce;
 
-    // GRAIN,FRUIT,VEGETABLE,MEAT,FISH
-    private String[] GRAIN = {"01","03","04","05"};
-    private String[] FRUIT = {"06","09"};
-    private String[] VEGETABLE = {"10","11","12"};
-    private String[] MEAT = {"41","43"};
-    private String[] FISH = {"61","63"};
-
-
     // 잡곡류
     @GetMapping("/grain")
-    public List<Item> callGrainApi(){
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return apiSerivce.apiEndPoint(now,GRAIN);
+    public List<Subject> callGrainApi(){
+        return apiSerivce.returnTop5("GRAIN");
     }
 
     // 과일류
     @GetMapping("/fruit")
-    public List<Item> callFruitApi(){
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return apiSerivce.apiEndPoint(now,FRUIT);
+    public List<Subject> callFruitApi(){
+        return apiSerivce.returnTop5("FRUIT");
     }
 
     // 채소류
     @GetMapping("/vegetable")
-    public List<Item> callVegetableApi(){
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return apiSerivce.apiEndPoint(now,VEGETABLE);
+    public List<Subject> callVegetableApi(){
+        return apiSerivce.returnTop5("VEGETABLE");
     }
 
     // 육류
     @GetMapping("/meat")
-    public List<Item> callMeatApi(){
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return apiSerivce.apiEndPoint(now,MEAT);
+    public List<Subject> callMeatApi(){
+        return apiSerivce.returnTop5("MEAT");
     }
 
     // 생선류
     @GetMapping("/fish")
-    public List<Item> callFishApi(){
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return apiSerivce.apiEndPoint(now,FISH);
+    public List<Subject> callFishApi(){
+        return apiSerivce.returnTop5("FISH");
     }
 
 

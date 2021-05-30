@@ -1,14 +1,14 @@
 package com.codingwasabi.bigtong.common;
 
-import com.codingwasabi.bigtong.Account;
-import com.codingwasabi.bigtong.main.repository.UserRepository;
+import com.codingwasabi.bigtong.main.Account;
+import com.codingwasabi.bigtong.main.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class userTestFactory extends TestFactory {
     @Autowired
-    protected UserRepository userRepository;
+    protected AccountRepository accountRepository;
 
     protected Account account1;
     protected Account account2;
