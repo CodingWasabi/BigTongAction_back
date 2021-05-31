@@ -4,6 +4,7 @@ import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
+import com.codingwasabi.bigtong.websocket.message.LeftPeople;
 import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +76,7 @@ public class AccountService {
             accountRepository.deleteAccountByNickname(nickname);
             chatRoomRepository.flush();
 
-            chatService.returnToAll(webSocketSessionMap,chatRoom);
+            chatService.sendMessageAll(new LeftPeople(chatRoom.getAccountList().size()),chatRoom,webSocketSessionMap);
 
         }
 

@@ -3,10 +3,10 @@ package com.codingwasabi.bigtong.websocket.handler;
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.entity.RoomType;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
-import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.api.APISerivce;
 import com.codingwasabi.bigtong.main.api.subject.entity.Subject;
 import com.codingwasabi.bigtong.main.service.AccountService;
+import com.codingwasabi.bigtong.websocket.exception.ChatRoomNotExistException;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
 import com.codingwasabi.bigtong.websocket.message.MessageType;
 import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
@@ -33,6 +33,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     private final APISerivce apiSerivce;
     private final ChatService chatService;
     private final AccountService accountService;
+    private final ChatRoomRepository chatRoomRepository;
     private String name;
 
     // GRAIN,FRUIT,VEGETABLE,MEAT,FISH
@@ -92,138 +93,84 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     }
 
+    public UpdateMessage makeUpdateMessage(Subject subject,RoomType roomType){
+        UpdateMessage updateMessage = UpdateMessage.builder()
+                .created(subject.getBidtime())
+                .mclassname(subject.getMclassname())
+                .price(subject.getPrice())
+                .roomType(roomType)
+                .messageType(MessageType.NOTICE)
+                .build();
+
+        return updateMessage;
+    }
+
     // 60초 마다 실행 test
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_grain(){
 
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.GRAIN)
+                .orElseThrow(ChatRoomNotExistException::new);
+
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject grain = apiSerivce.manageSubject(GRAIN,"GRAIN");
 
-        if(grain != null){
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .created(grain.getBidtime())
-                    .mclassname(grain.getMclassname())
-                    .price(grain.getPrice())
-                    .roomType(RoomType.GRAIN)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
-        else{
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .mclassname("did not update")
-                    .roomType(RoomType.GRAIN)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
+        if(grain != null)
+            chatService.sendMessageAll(makeUpdateMessage(grain, RoomType.GRAIN), chatRoom, webSocketSessionMap);
     }
 
     // 60초 마다 실행 test
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_fruit(){
-
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.FRUIT)
+                .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject fruit = apiSerivce.manageSubject(FRUIT,"FRUIT");
 
-        if(fruit != null){
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .created(fruit.getBidtime())
-                    .mclassname(fruit.getMclassname())
-                    .price(fruit.getPrice())
-                    .roomType(RoomType.FRUIT)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
-        else{
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .mclassname("did not update")
-                    .roomType(RoomType.FRUIT)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
+
+        if(fruit != null)
+            chatService.sendMessageAll(makeUpdateMessage(fruit, RoomType.FRUIT),chatRoom,webSocketSessionMap);
+
     }
 
     // 60초 마다 실행 test
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_fish(){
-
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.FISH)
+                .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject fish = apiSerivce.manageSubject(FISH,"FISH");
 
-        if(fish != null){
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .created(fish.getBidtime())
-                    .mclassname(fish.getMclassname())
-                    .price(fish.getPrice())
-                    .roomType(RoomType.FISH)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
-        else{
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .mclassname("did not update")
-                    .roomType(RoomType.FISH)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
+
+        if(fish != null)
+            chatService.sendMessageAll(makeUpdateMessage(fish, RoomType.FISH),chatRoom,webSocketSessionMap);
+
     }
 
     // 60초 마다 실행 test
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_vegetable(){
-
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.VEGETABLE)
+                .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject vegetable = apiSerivce.manageSubject(VEGETABLE,"VEGETABLE");
 
-        if(vegetable != null){
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .created(vegetable.getBidtime())
-                    .mclassname(vegetable.getMclassname())
-                    .price(vegetable.getPrice())
-                    .roomType(RoomType.VEGETABLE)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
-        else{
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .mclassname("did not update")
-                    .roomType(RoomType.VEGETABLE)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
+
+        if(vegetable != null)
+            chatService.sendMessageAll(makeUpdateMessage(vegetable, RoomType.VEGETABLE),chatRoom,webSocketSessionMap);
     }
 
     // 60초 마다 실행 test
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_meat(){
-
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.MEAT)
+                .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject meat = apiSerivce.manageSubject(MEAT,"MEAT");
 
-        if(meat != null){
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .created(meat.getBidtime())
-                    .mclassname(meat.getMclassname())
-                    .price(meat.getPrice())
-                    .roomType(RoomType.MEAT)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
-        else{
-            UpdateMessage updateMessage = UpdateMessage.builder()
-                    .mclassname("did not update")
-                    .roomType(RoomType.MEAT)
-                    .messageType(MessageType.NOTICE)
-                    .build();
-            chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
-        }
+
+        if(meat != null)
+            chatService.sendMessageAll(makeUpdateMessage(meat, RoomType.MEAT),chatRoom,webSocketSessionMap);
+
     }
 }

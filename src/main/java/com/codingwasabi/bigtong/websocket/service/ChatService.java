@@ -7,10 +7,7 @@ import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
 import com.codingwasabi.bigtong.websocket.exception.AccountNotExistException;
 import com.codingwasabi.bigtong.websocket.exception.ChatRoomNotExistException;
-import com.codingwasabi.bigtong.websocket.message.ChatMessage;
-import com.codingwasabi.bigtong.websocket.message.LeftPeople;
-import com.codingwasabi.bigtong.websocket.message.MessageType;
-import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
+import com.codingwasabi.bigtong.websocket.message.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,20 +35,16 @@ public class ChatService {
     public void message_in(WebSocketSession webSocketSession, ChatMessage chatMessage,Map<String,WebSocketSession> webSocketSessionMap){
 
 
-        //test log
-        log.info("websocket : chatService : message_in ");
-
         MessageType messageType = chatMessage.getMessageType();
         RoomType roomType = chatMessage.getRoomType();
         String nickname = chatMessage.getNickname();
-
-        Account account = accountRepository.findAccountByNickname(nickname);
+        log.info("ENTER : " + nickname);
+        Account account = accountRepository.findByNickname(nickname).orElseThrow(AccountNotExistException::new);
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(roomType).orElseThrow(ChatRoomNotExistException::new);
-
-        // chatMessage 의 Type을 구분
 
         // ENTER 인경우
         if(messageType == MessageType.ENTER){
+            log.info("ENTER_in : " + nickname);
 
             // inetSocketAddress 형태의 주소를 String형태로 캐스팅
             // inetSocketAddress -> inetAddress : get String ip
@@ -74,9 +67,6 @@ public class ChatService {
 
             // 해당 방에 입장 메시지 전송
             sendMessageAll(message,chatRoom,webSocketSessionMap);
-
-            // test log
-            log.info("websocket : chatService : enterRoom : 현재 남은 인원 : "+ chatRoom.getAccountList().size());
         }
 
         // TALK 이거나 NOTICE 인 경우
@@ -93,83 +83,22 @@ public class ChatService {
 
             // map 에서 삭제
             webSocketSessionMap.remove(account);
-            returnToAll(webSocketSessionMap,room);
+            sendMessageAll(new LeftPeople(chatRoom.getAccountList().size()),chatRoom,webSocketSessionMap);
             chatRoomRepository.flush();
 
-            log.info("websocket : chatService : exitRoom : 현재 남은 인원 : "+ returnLeftPeople(webSocketSession,chatRoom));
         }
     }
 
-    public void noticeRoomPeople(UpdateMessage updateMessage,Map<String,WebSocketSession> webSocketSessionMap){
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(updateMessage.getRoomType()).orElseThrow(ChatRoomNotExistException::new);
-
-        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId())
-                .orElseThrow(AccountNotExistException::new);
-
-            for(Account account : accountList){
-                // 각 Account 별 websocketSession 정보 조회
-                // error 이거나
-                WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
-
-                // 해당 webSocketSession에 메시지 전송
-                try{
-                    webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(updateMessage)));
-                }catch (IOException i){
-                    log.error(i.getMessage(),i);
-                }
-            }
-
-    }
-
+    /**
+     * 방에 접속한 사람들에게 메시지 전체 전송
+     * @param message
+     * @param chatRoom
+     * @param webSocketSessionMap
+     */
 
     // Server -> Client
     // (Actually, Client -> Server -> Client)
-    public void sendMessageAll(ChatMessage chatMessage,ChatRoom chatRoom,Map<String,WebSocketSession> webSocketSessionMap){
-
-        // test log
-        log.info("websocket : chatService : sendMessageAll ");
-
-        // 해당 방에 접속된 모든 Account 리스트 생성
-        // error 이거나
-        List<Account> accountList = accountRepository.findAllByChatRoomId(chatRoom.getId())
-                .orElseThrow(AccountNotExistException::new);;
-
-        // 각 Account 에게 메시지 전송
-        if(accountList.isEmpty())
-            log.info("account is Empty");
-        else
-        for(Account account : accountList){
-            // 각 Account 별 websocketSession 정보 조회
-            // error 이거나
-            WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
-
-            log.info("send all , session info : "+webSocketSession.getId());
-
-            // 해당 webSocketSession에 메시지 전송
-            sendMessage(webSocketSession,chatMessage);
-        }
-    }
-
-    public void sendMessage(WebSocketSession webSocketSession, ChatMessage chatMessage){
-        try{
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(chatMessage)));
-        }catch (IOException i){
-            log.error(i.getMessage(),i);
-        }
-    }
-
-    public int returnLeftPeople(WebSocketSession webSocketSession,ChatRoom chatRoom){
-        LeftPeople leftPeople = new LeftPeople(chatRoom.getAccountList().size());
-
-        try {
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(leftPeople)));
-        }catch (IOException i){
-            log.error(i.getMessage(),i);
-        }
-        return chatRoom.getAccountList().size();
-    }
-
-    public void returnToAll(Map<String,WebSocketSession> webSocketSessionMap,ChatRoom chatRoom){
+    public void sendMessageAll(Message message,ChatRoom chatRoom,Map<String,WebSocketSession> webSocketSessionMap){
 
         // 해당 방에 접속된 모든 Account 리스트 생성
         // error 이거나
@@ -179,18 +108,28 @@ public class ChatService {
         // 각 Account 에게 메시지 전송
         if(accountList.isEmpty());
         else
-            for(Account account : accountList){
-                // 각 Account 별 websocketSession 정보 조회
-                // error 이거나
-                WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
+        for(Account account : accountList){
+            // 각 Account 별 websocketSession 정보 조회
+            // error 이거나
+            WebSocketSession webSocketSession = webSocketSessionMap.get(account.getNickname());
 
-                // 해당 webSocketSession에 메시지 전송
-                try{
-                    webSocketSession.sendMessage(new TextMessage(
-                            objectMapper.writeValueAsString(new LeftPeople(chatRoom.getAccountList().size()))));
-                }catch (IOException i){
-                    log.error(i.getMessage(),i);
-                }
-            }
+            // 해당 webSocketSession에 메시지 전송
+            sendMessage(webSocketSession,message);
+        }
+    }
+
+    /**
+     * 메시지 하나씩 보내기
+     * @param webSocketSession
+     * @param message
+     */
+
+    public void sendMessage(WebSocketSession webSocketSession, Message message){
+
+        try{
+            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+        }catch (IOException i){
+            log.error(i.getMessage(),i);
+        }
     }
 }

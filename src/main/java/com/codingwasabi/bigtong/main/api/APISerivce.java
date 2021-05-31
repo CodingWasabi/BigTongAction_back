@@ -96,6 +96,7 @@ public class APISerivce {
                             break;
                         index++;
                         Grain new_grain = new Grain(item.bidtime, item.mclassname, item.price, item.unitname);
+                        grain = new_grain;
                         grainRepository.save(new_grain);
                     }
                     return grain;
@@ -125,10 +126,7 @@ public class APISerivce {
                     }
                     return fish;
                 }
-
-
             }
-
         }
 
 
@@ -154,7 +152,6 @@ public class APISerivce {
                     return fruit;
                 }
             }
-
         }
 
 
@@ -181,8 +178,6 @@ public class APISerivce {
                     return vegetable;
                 }
             }
-
-
         }
         else if(subject.equals("MEAT")){
 
@@ -206,7 +201,6 @@ public class APISerivce {
                         return meat;
                     }
             }
-
         }
 
         return null;
@@ -223,7 +217,6 @@ public class APISerivce {
                 String apiEndPoint = "http://openapi.epis.or.kr/openapi/service/RltmAucBrknewsService/getPrdlstRltmAucBrknewsList?"+
                         "serviceKey=dzuiZZbhGGhdYgcvkdDPwvCHAdzZ%2FEkmO0%2BAqtpTaXsZLox1We%2BTJtegsxRak6NRX6gcVpEwrhGKayRbrDfjAQ%3D%3D";
 
-                log.info(object+" 들어옴");
                 apiEndPoint = apiEndPoint + "&dates="+ now + "&lcode=" + object +"&numOfRows=2";
 
                 Response response = parser(get(apiEndPoint));
@@ -233,11 +226,9 @@ public class APISerivce {
                     for (Item item : response.body.getItems()){
                         objectItemList.add(item);
 
-                        log.info("이름 : "+item.mclassname);
                     }
                 }
-                log.info("개수 : " + objectItemList.size());
-                log.info(object+" 완료");
+
             }
 
         }catch (Exception e ){
@@ -252,13 +243,11 @@ public class APISerivce {
                 if(!o1.bidtime.contains("21-")) {
                     o1.bidtime = prefix.concat(o1.bidtime);
                     o1.bidtime = o1.bidtime.replace("/", "-");
-                    log.info("time : " + o1.bidtime);
                 }
 
                 if(!o2.bidtime.contains("21-")) {
                     o2.bidtime = prefix.concat(o2.bidtime);
                     o2.bidtime = o2.bidtime.replace("/", "-");
-                    log.info("time : " + o2.bidtime);
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss");
                 LocalDateTime o1_date = LocalDateTime.parse(o1.bidtime,formatter);
@@ -290,8 +279,6 @@ public class APISerivce {
         restTemplate.getMessageConverters().add(0,new StringHttpMessageConverter(Charset.forName("UTF-8")));
 
 
-
-        log.info("try to get XML :  " + url );
         String response = null;
         try{
         response = restTemplate.getForObject(url,String.class);
@@ -300,7 +287,6 @@ public class APISerivce {
         }catch (IllegalArgumentException i){
             log.error("timeout");
         }
-        log.info("finish get " + response);
 
         return response;
     }
