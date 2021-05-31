@@ -5,6 +5,10 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  devtools:
+    restart:
+      enabled: true
+
   jpa:
     hibernate:
       ddl-auto: create

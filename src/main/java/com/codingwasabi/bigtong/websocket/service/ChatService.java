@@ -43,7 +43,7 @@ public class ChatService {
 
         MessageType messageType = chatMessage.getMessageType();
         RoomType roomType = chatMessage.getRoomType();
-        String nickname = chatMessage.getSender();
+        String nickname = chatMessage.getNickname();
 
         Account account = accountRepository.findAccountByNickname(nickname);
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(roomType).orElseThrow(ChatRoomNotExistException::new);
@@ -66,7 +66,7 @@ public class ChatService {
 
             ChatMessage message = ChatMessage.builder()
                     .message(account.getNickname()+"님이 입장하셨습니다.")
-                    .sender("ADMIN")
+                    .nickname("ADMIN")
                     .leftPeople(chatRoom.getAccountList().size())
                     .roomType(account.getChatRoom().getType())
                     .messageType(MessageType.TALK)

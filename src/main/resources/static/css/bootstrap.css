@@ -43,6 +43,13 @@
     scroll-behavior: smooth;
   }
 }
+.mainmenu{
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 
 body {
   margin: 0;
@@ -3020,6 +3027,20 @@ textarea.form-control-lg {
   background-color: #0dcaf0;
   border-color: #0dcaf0;
 }
+
+.btn-size{
+  height: 50px;
+  width: 100%;
+}
+
+.btn-size-half{
+  height: 50px;
+  width: 49%;
+  margin-right: auto;
+  margin-left: auto;
+
+}
+
 .btn-info:hover {
   color: #000;
   background-color: #31d2f2;
