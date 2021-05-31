@@ -47,7 +47,6 @@ public class ChatService {
 
         // ENTER 인경우
         if(messageType == MessageType.ENTER){
-            log.info("ENTER_in : " + nickname);
 
             // inetSocketAddress 형태의 주소를 String형태로 캐스팅
             // inetSocketAddress -> inetAddress : get String ip
@@ -57,11 +56,9 @@ public class ChatService {
 
             chatRoomRepository.flush();
 
-            log.info("닉네임 확인 : " + account.getNickname());
-            log.info("웹소켓 확인 : "+webSocketSession);
-
             // 해당 account 와 session 매핑
             webSocketSessionMap.put(account.getNickname(),webSocketSession);
+
 
             ChatMessage message = ChatMessage.builder()
                     .message(account.getNickname()+"님이 입장하셨습니다.")
@@ -71,8 +68,6 @@ public class ChatService {
                     .messageType(MessageType.TALK)
                     .build();
 
-            log.info("보내는 메시지 확인 : "+message);
-            log.info("보내는 메시지 내용 : "+message.getMessage());
 
             // 해당 방에 입장 메시지 전송
             sendMessageAll(message,chatRoom,webSocketSessionMap);
@@ -135,7 +130,6 @@ public class ChatService {
 
     public void sendMessage(WebSocketSession webSocketSession, Message message){
 
-        log.info("message check : "+ message);
         try{
             webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
         }catch (IOException i){
