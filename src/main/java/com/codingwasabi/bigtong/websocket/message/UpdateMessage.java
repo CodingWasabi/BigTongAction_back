@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class UpdateMessage {
+public class UpdateMessage extends Message{
     private MessageType messageType;
 
     private RoomType roomType;

@@ -79,7 +79,6 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         // 접속된 session들에 대해
         webSocketSessionMap.forEach((nickname,webSocketSession)->{
-            log.info("session for each test : " +webSocketSession.getId());
 
             // 종료된 session과 같다면 계정 정보 삭제
             if(webSocketSession == session) {
@@ -97,7 +96,6 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     @Scheduled(fixedDelay =60* 1000)
     public void renewList_grain(){
 
-        log.info("update grain in ");
         // 업데이트가 되었다면 ws 로 데이터 전송
         Subject grain = apiSerivce.manageSubject(GRAIN,"GRAIN");
 
@@ -112,7 +110,6 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             chatService.noticeRoomPeople(updateMessage,webSocketSessionMap);
         }
         else{
-            log.info("GRAIN null 진입");
             UpdateMessage updateMessage = UpdateMessage.builder()
                     .mclassname("did not update")
                     .roomType(RoomType.GRAIN)

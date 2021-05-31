@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping("/object")
+@RequestMapping("/subject")
 @RequiredArgsConstructor
 public class APIController {
 

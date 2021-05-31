@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LeftPeople {
+public class LeftPeople extends Message{
     private int leftPeople;
 
     public LeftPeople(int leftPeople){

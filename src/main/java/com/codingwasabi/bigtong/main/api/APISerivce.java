@@ -54,6 +54,14 @@ public class APISerivce {
         return null;
     }
 
+    /**
+     * 동일한 데이터인지 여부 확인
+     * 동일한 데이터 -> 업데이트 안함 : false
+     * 동일한 데이터가 아님 -> 업데이트 진행 : true
+     * @param item
+     * @param subject
+     * @return
+     */
     private boolean checkUpdated(Item item, Subject subject){
         if(item == null)
             return false;
