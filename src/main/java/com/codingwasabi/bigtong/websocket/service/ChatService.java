@@ -39,9 +39,8 @@ public class ChatService {
         RoomType roomType = chatMessage.getRoomType();
         String nickname = chatMessage.getNickname();
 
-        log.info("ENTER chatmessage : " + chatMessage);
-        log.info("ENTER chatmessage 내용 : " + chatMessage.getMessage() );
-        log.info("ENTER : " + nickname);
+
+
 
         Account account = accountRepository.findByNickname(nickname).orElseThrow(AccountNotExistException::new);
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(roomType).orElseThrow(ChatRoomNotExistException::new);
@@ -57,6 +56,9 @@ public class ChatService {
             account.enterRoom(chatRoom);
 
             chatRoomRepository.flush();
+
+            log.info("닉네임 확인 : " + account.getNickname());
+            log.info("웹소켓 확인 : "+webSocketSession);
 
             // 해당 account 와 session 매핑
             webSocketSessionMap.put(account.getNickname(),webSocketSession);
@@ -135,7 +137,7 @@ public class ChatService {
 
         log.info("message check : "+ message);
         try{
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString((ChatMessage)message)));
+            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
         }catch (IOException i){
             log.error(i.getMessage(),i);
         }
