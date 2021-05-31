@@ -38,7 +38,10 @@ public class ChatService {
         MessageType messageType = chatMessage.getMessageType();
         RoomType roomType = chatMessage.getRoomType();
         String nickname = chatMessage.getNickname();
+
+        log.info("ENTER chatmessage : " + chatMessage);
         log.info("ENTER : " + nickname);
+
         Account account = accountRepository.findByNickname(nickname).orElseThrow(AccountNotExistException::new);
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(roomType).orElseThrow(ChatRoomNotExistException::new);
 
@@ -126,6 +129,7 @@ public class ChatService {
 
     public void sendMessage(WebSocketSession webSocketSession, Message message){
 
+        log.info("message check : "+ message);
         try{
             webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
         }catch (IOException i){
