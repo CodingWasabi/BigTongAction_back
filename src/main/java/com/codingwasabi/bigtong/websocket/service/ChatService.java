@@ -135,7 +135,7 @@ public class ChatService {
 
         log.info("message check : "+ message);
         try{
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString((ChatMessage)message)));
         }catch (IOException i){
             log.error(i.getMessage(),i);
         }
