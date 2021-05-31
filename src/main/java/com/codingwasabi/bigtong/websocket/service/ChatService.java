@@ -40,6 +40,7 @@ public class ChatService {
         String nickname = chatMessage.getNickname();
 
         log.info("ENTER chatmessage : " + chatMessage);
+        log.info("ENTER chatmessage 내용 : " + chatMessage.getMessage() );
         log.info("ENTER : " + nickname);
 
         Account account = accountRepository.findByNickname(nickname).orElseThrow(AccountNotExistException::new);
@@ -67,6 +68,9 @@ public class ChatService {
                     .roomType(account.getChatRoom().getType())
                     .messageType(MessageType.TALK)
                     .build();
+
+            log.info("보내는 메시지 확인 : "+message);
+            log.info("보내는 메시지 내용 : "+message.getMessage());
 
             // 해당 방에 입장 메시지 전송
             sendMessageAll(message,chatRoom,webSocketSessionMap);
