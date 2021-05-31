@@ -216,9 +216,8 @@ public class APISerivce {
                         "serviceKey=dzuiZZbhGGhdYgcvkdDPwvCHAdzZ%2FEkmO0%2BAqtpTaXsZLox1We%2BTJtegsxRak6NRX6gcVpEwrhGKayRbrDfjAQ%3D%3D";
 
                 log.info(object+" 들어옴");
-                // apiEndPoint = apiEndPoint + "&dates="+ now + "&lcode=" + object +"&numOfRows=2";
-                // 임시로
-                apiEndPoint = apiEndPoint + "&dates=20210528" + "&lcode=" + object +"&numOfRows=2";
+                apiEndPoint = apiEndPoint + "&dates="+ now + "&lcode=" + object +"&numOfRows=2";
+
                 Response response = parser(get(apiEndPoint));
 
                 // item들이 비어 있지 않으면 add
