@@ -1,6 +1,7 @@
 package com.codingwasabi.bigtong.main.api;
 
 import com.codingwasabi.bigtong.main.api.subject.entity.*;
+import com.codingwasabi.bigtong.main.api.subject.exception.NoDataInDBandInput;
 import com.codingwasabi.bigtong.main.api.subject.exception.NoPreviousDataInTable;
 import com.codingwasabi.bigtong.main.api.subject.repository.*;
 import com.codingwasabi.bigtong.main.dto.Item;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -36,7 +39,8 @@ public class APISerivce {
     private final FishRepository fishRepository;
     private final VegetableRepository vegetableRepository;
     private final MeatRepository meatRepository;
-
+    private List<Item> updatedList;
+    private int index;
 
     // 데이터 베이스로 부터 최신 5개 불러오기
     public List<Subject> returnTop5(String subject){
@@ -54,55 +58,86 @@ public class APISerivce {
         return null;
     }
 
+    private LocalDateTime dateFormat(String bidtime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss");
+            bidtime = "21-".concat(bidtime);
+            bidtime = bidtime.replace("/", "-");
+
+            return LocalDateTime.parse(bidtime, formatter);
+
+    }
+
     /**
      * 동일한 데이터인지 여부 확인
      * 동일한 데이터 -> 업데이트 안함 : false
      * 동일한 데이터가 아님 -> 업데이트 진행 : true
-     * @param item
+     * @param itemList
      * @param subject
      * @return
      */
-    private boolean checkUpdated(Item item, Subject subject){
-        if(item == null)
-            return false;
+    private Optional<List<Item>> checkUpdated(List<Item> itemList, Subject subject){
 
-        else if(item.mclassname.equals(subject.getMclassname())
-                && item.bidtime.equals(subject.getBidtime())
-                && item.price.equals(subject.getPrice()))
-            return false;
+        if(!itemList.isEmpty()){
 
-        return true;
+            // 데이터베이스에 저장된 subject가 없다면 들어온 데이터 전부 입력
+            if(subject.getBidtime() == null)
+                return Optional.of(itemList);
 
+            else{
+                // 05/30 HH:mm:ss  -> 21-05-30 HH:mm:ss 로 포맷
+                // localdatetime 으로 포매팅
+
+                LocalDateTime subject_bidtime = dateFormat(subject.getBidtime());
+
+                updatedList = new ArrayList<>();
+
+                for(Item item : itemList){
+
+                    LocalDateTime item_bidtime = dateFormat(item.bidtime);
+
+                    // item의 날짜가 더 최신이라면
+                    if(item_bidtime.isAfter(subject_bidtime))
+                        updatedList.add(item);
+
+                }
+                return Optional.of(updatedList);
+            }
+        }
+        return Optional.empty();
     }
 
     @Transactional
-    public Subject manageSubject(String[] subjectNum,String subject ){
+    public List<Subject> manageSubject(String[] subjectNum,String subject ){
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-
         if(subject.equals("GRAIN")){
+
+            // null이면 값이 없는 빈 객체 입력 -> exception 발생 안하는 이유는, 업데이트로 값이 채워지기 때문이다.
             Grain grain = grainRepository.findFirstByOrderByBidtimeDesc()
                     .orElse(new Grain());
 
-            List<Item> itemList = apiEndPoint(now,subjectNum);
+            // optional 로 바꾸기
+            List<Item> itemList = checkUpdated(apiEndPoint(now,subjectNum),grain)
+                    .orElseThrow(NoDataInDBandInput::new);
 
+            // 업데이트가 되었다면
+            if(!itemList.isEmpty()){
 
-            if(!itemList.isEmpty()) {
+                // 리턴할 리스트
+                List<Subject> updateSubjectList = new ArrayList<>();
+                index=0;
 
-                if(checkUpdated(itemList.get(0),grain)) {
-                    int index = 0;
-                    for (Item item : itemList) {
-                        if (index > 5)
-                            break;
-                        index++;
-                        Grain new_grain = new Grain(item.bidtime, item.mclassname, item.price, item.unitname);
-                        grain = new_grain;
+                for(Item item : itemList){
+                        Grain new_grain = new Grain(item.bidtime,item.mclassname,item.price,item.unitname);
                         grainRepository.save(new_grain);
-                    }
-                    return grain;
+                        updateSubjectList.add(new_grain);
+                    index++;
                 }
+                return updateSubjectList;
             }
+
         }
+
 
 
         else if (subject.equals("FISH")){
@@ -110,21 +145,27 @@ public class APISerivce {
             Fish fish = fishRepository.findFirstByOrderByBidtimeDesc()
                     .orElse(new Fish());
 
-            List<Item> itemList = apiEndPoint(now,subjectNum);
+            List<Item> itemList = checkUpdated(apiEndPoint(now,subjectNum),fish)
+                    .orElseThrow(NoDataInDBandInput::new);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
 
-                if(checkUpdated(itemList.get(0),fish)) {
-                    int index = 0;
+                if(!itemList.isEmpty()) {
+                    index = 0;
+                    List<Subject> updateSubjectList = new ArrayList<>();
+
                     for (Item item : itemList) {
                         if (index > 5)
                             break;
+                        else {
+                            Fish new_fish = new Fish(item.bidtime, item.mclassname, item.price, item.unitname);
+                            fishRepository.save(new_fish);
+                            updateSubjectList.add(new_fish);
+                        }
                         index++;
-                        Fish new_fish = new Fish(item.bidtime, item.mclassname, item.price, item.unitname);
-                        fishRepository.save(new_fish);
                     }
-                    return fish;
+                    return updateSubjectList;
                 }
             }
         }
@@ -135,22 +176,25 @@ public class APISerivce {
             Fruit fruit = fruitRepository.findFirstByOrderByBidtimeDesc()
                     .orElse(new Fruit());
 
-            List<Item> itemList = apiEndPoint(now,subjectNum);
+            List<Item> itemList = checkUpdated(apiEndPoint(now,subjectNum),fruit)
+                    .orElseThrow(NoDataInDBandInput::new);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
+                index= 0;
+                List<Subject> updateSubjectList = new ArrayList<>();
 
-                if(checkUpdated(itemList.get(0),fruit)) {
-                    int index = 0;
-                    for (Item item : itemList) {
-                        if (index > 5)
-                            break;
-                        index++;
-                        Fruit new_fruit = new Fruit(item.bidtime, item.mclassname, item.price, item.unitname);
+                for(Item item : itemList){
+                    if(index>5)
+                        break;
+                    else{
+                        Fruit new_fruit = new Fruit(item.bidtime,item.mclassname,item.price,item.unitname);
                         fruitRepository.save(new_fruit);
+                        updateSubjectList.add(new_fruit);
                     }
-                    return fruit;
+                    index++;
                 }
+                return updateSubjectList;
             }
         }
 
@@ -160,46 +204,53 @@ public class APISerivce {
             Vegetable vegetable = vegetableRepository.findFirstByOrderByBidtimeDesc()
                     .orElse(new Vegetable());
 
-            List<Item> itemList = apiEndPoint(now,subjectNum);
+            List<Item> itemList = checkUpdated(apiEndPoint(now,subjectNum),vegetable)
+                    .orElseThrow(NoDataInDBandInput::new);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
+                index = 0;
+                List<Subject> updateSubjectList = new ArrayList<>();
 
-                if(checkUpdated(itemList.get(0),vegetable)) {
-                    int index = 0;
-                    for (Item item : itemList) {
-                        if (index > 5)
-                            break;
-                        index++;
-                        Vegetable new_vegetable = new Vegetable(item.bidtime, item.mclassname, item.price, item.unitname);
+                for(Item item : itemList){
+                    if(index>5)
+                        break;
+                    else{
+                        Vegetable new_vegetable = new Vegetable(item.bidtime,item.mclassname,item.price,item.unitname);
                         vegetableRepository.save(new_vegetable);
+                        updateSubjectList.add(new_vegetable);
                     }
-
-                    return vegetable;
+                    index++;
                 }
+                return updateSubjectList;
             }
         }
+
         else if(subject.equals("MEAT")){
 
 
             Meat meat = meatRepository.findFirstByOrderByBidtimeDesc()
                     .orElse(new Meat());
 
-            List<Item> itemList = apiEndPoint(now,subjectNum);
+            List<Item> itemList = checkUpdated(apiEndPoint(now,subjectNum),meat)
+                    .orElseThrow(NoDataInDBandInput::new);
 
             // update 가 되었다면
             if(!itemList.isEmpty()) {
-                    if(checkUpdated(itemList.get(0),meat)) {
-                        int index = 0;
-                        for (Item item : itemList) {
-                            if (index > 5)
-                                break;
-                            index++;
-                            Meat new_meat = new Meat(item.bidtime, item.mclassname, item.price, item.unitname);
-                            meatRepository.save(new_meat);
-                        }
-                        return meat;
+                index=0;
+                List<Subject> updateSubjectList = new ArrayList<>();
+
+                for(Item item : itemList){
+                    if(index>5)
+                        break;
+                    else{
+                        Meat new_meat = new Meat(item.bidtime,item.mclassname,item.price,item.unitname);
+                        meatRepository.save(new_meat);
+                        updateSubjectList.add(new_meat);
                     }
+                    index++;
+                }
+                return updateSubjectList;
             }
         }
 
@@ -225,7 +276,6 @@ public class APISerivce {
                 if (response.body.items != null) {
                     for (Item item : response.body.getItems()){
                         objectItemList.add(item);
-
                     }
                 }
 

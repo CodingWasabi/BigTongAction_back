@@ -22,6 +22,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -113,10 +114,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                 .orElseThrow(ChatRoomNotExistException::new);
 
         // 업데이트가 되었다면 ws 로 데이터 전송
-        Subject grain = apiSerivce.manageSubject(GRAIN,"GRAIN");
+        List<Subject> grainList = apiSerivce.manageSubject(GRAIN,"GRAIN");
 
-        if(grain != null)
-            chatService.sendMessageAll(makeUpdateMessage(grain, RoomType.GRAIN), chatRoom, webSocketSessionMap);
+        for(Subject subject : grainList){
+            chatService.sendMessageAll(makeUpdateMessage(subject,RoomType.GRAIN),chatRoom,webSocketSessionMap);
+        }
     }
 
     // 60초 마다 실행 test
@@ -125,11 +127,12 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.FRUIT)
                 .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
-        Subject fruit = apiSerivce.manageSubject(FRUIT,"FRUIT");
+        List<Subject> fruitList = apiSerivce.manageSubject(FRUIT,"FRUIT");
 
 
-        if(fruit != null)
-            chatService.sendMessageAll(makeUpdateMessage(fruit, RoomType.FRUIT),chatRoom,webSocketSessionMap);
+        for(Subject subject : fruitList){
+            chatService.sendMessageAll(makeUpdateMessage(subject,RoomType.FRUIT),chatRoom,webSocketSessionMap);
+        }
 
     }
 
@@ -139,12 +142,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.FISH)
                 .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
-        Subject fish = apiSerivce.manageSubject(FISH,"FISH");
+        List<Subject> fishList = apiSerivce.manageSubject(FISH,"FISH");
 
-
-        if(fish != null)
-            chatService.sendMessageAll(makeUpdateMessage(fish, RoomType.FISH),chatRoom,webSocketSessionMap);
-
+        for(Subject subject:fishList)
+            chatService.sendMessageAll(makeUpdateMessage(subject,RoomType.FISH),chatRoom,webSocketSessionMap);
     }
 
     // 60초 마다 실행 test
@@ -153,11 +154,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.VEGETABLE)
                 .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
-        Subject vegetable = apiSerivce.manageSubject(VEGETABLE,"VEGETABLE");
+        List<Subject> vegetableList = apiSerivce.manageSubject(VEGETABLE,"VEGETABLE");
 
-
-        if(vegetable != null)
-            chatService.sendMessageAll(makeUpdateMessage(vegetable, RoomType.VEGETABLE),chatRoom,webSocketSessionMap);
+        for(Subject subject:vegetableList)
+            chatService.sendMessageAll(makeUpdateMessage(subject,RoomType.VEGETABLE),chatRoom,webSocketSessionMap);
     }
 
     // 60초 마다 실행 test
@@ -166,11 +166,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByType(RoomType.MEAT)
                 .orElseThrow(ChatRoomNotExistException::new);
         // 업데이트가 되었다면 ws 로 데이터 전송
-        Subject meat = apiSerivce.manageSubject(MEAT,"MEAT");
+        List<Subject> meatList = apiSerivce.manageSubject(MEAT,"MEAT");
 
-
-        if(meat != null)
-            chatService.sendMessageAll(makeUpdateMessage(meat, RoomType.MEAT),chatRoom,webSocketSessionMap);
+        for(Subject subject:meatList)
+            chatService.sendMessageAll(makeUpdateMessage(subject,RoomType.MEAT),chatRoom,webSocketSessionMap);
 
     }
 }
