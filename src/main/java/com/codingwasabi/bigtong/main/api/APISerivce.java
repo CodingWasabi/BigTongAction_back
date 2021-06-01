@@ -235,33 +235,6 @@ public class APISerivce {
             e.printStackTrace();
         }
 
-        // 날짜 내림차순 (최신순)
-        objectItemList.sort(new Comparator<Item>() {
-            @Override
-            public int compare(Item o1, Item o2) {
-                String prefix = "21-";
-                if(!o1.bidtime.contains("21-")) {
-                    o1.bidtime = prefix.concat(o1.bidtime);
-                    o1.bidtime = o1.bidtime.replace("/", "-");
-                }
-
-                if(!o2.bidtime.contains("21-")) {
-                    o2.bidtime = prefix.concat(o2.bidtime);
-                    o2.bidtime = o2.bidtime.replace("/", "-");
-                }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss");
-                LocalDateTime o1_date = LocalDateTime.parse(o1.bidtime,formatter);
-                LocalDateTime o2_date = LocalDateTime.parse(o2.bidtime,formatter);
-
-                if(o1_date.isEqual(o2_date))
-                    return 0;
-                else if(o1_date.isAfter(o2_date))
-                    return -1;
-                else
-                    return 1;
-            }
-        });
-
         return objectItemList;
     }
 
