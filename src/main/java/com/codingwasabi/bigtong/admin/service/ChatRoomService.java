@@ -6,6 +6,7 @@ import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
+import com.codingwasabi.bigtong.websocket.exception.ChatRoomNotExistException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,4 +38,13 @@ public class ChatRoomService {
     }
 
 
+    public boolean checkRoomExist(){
+        chatRoomRepository.findChatRoomByType(RoomType.GRAIN).orElseThrow(ChatRoomNotExistException::new);
+        chatRoomRepository.findChatRoomByType(RoomType.FISH).orElseThrow(ChatRoomNotExistException::new);
+        chatRoomRepository.findChatRoomByType(RoomType.FRUIT).orElseThrow(ChatRoomNotExistException::new);
+        chatRoomRepository.findChatRoomByType(RoomType.VEGETABLE).orElseThrow(ChatRoomNotExistException::new);
+        chatRoomRepository.findChatRoomByType(RoomType.MEAT).orElseThrow(ChatRoomNotExistException::new);
+
+        return true;
+    }
 }

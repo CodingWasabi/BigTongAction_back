@@ -22,6 +22,7 @@ public class AdminController {
     private final AdminService adminService;
     private final ChatRoomService chatRoomService;
 
+
     // 바꿔야함
     @GetMapping("/connecting")
     public String showConnectiongUser(){
@@ -33,11 +34,13 @@ public class AdminController {
     @PostMapping("/create")
     public String create_chatRoom(){
 
-        chatRoomService.createChatRoom("GRAIN");
-        chatRoomService.createChatRoom("VEGETABLE");
-        chatRoomService.createChatRoom("FRUIT");
-        chatRoomService.createChatRoom("MEAT");
-        chatRoomService.createChatRoom("FISH");
+        if(!chatRoomService.checkRoomExist()){
+            chatRoomService.createChatRoom("GRAIN");
+            chatRoomService.createChatRoom("VEGETABLE");
+            chatRoomService.createChatRoom("FRUIT");
+            chatRoomService.createChatRoom("MEAT");
+            chatRoomService.createChatRoom("FISH");
+        }
         return "redirect:/";
     }
 
