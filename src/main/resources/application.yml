@@ -12,13 +12,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/bigtong
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://gogogo.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com/gogogo_db
+    username: admin
+    password: 1q2w3e4r!
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
     #logging:
     #level:
