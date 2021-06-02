@@ -50,8 +50,7 @@ public class ChatService {
 
             // inetSocketAddress 형태의 주소를 String형태로 캐스팅
             // inetSocketAddress -> inetAddress : get String ip
-            account.insertSession(webSocketSession.getId(),
-                    webSocketSession.getRemoteAddress().getAddress().getHostAddress());
+            account.insertSession(webSocketSession.getId(),webSocketSession.getRemoteAddress().getAddress().getHostAddress());
             account.enterRoom(chatRoom);
 
             chatRoomRepository.flush();

@@ -14,11 +14,5 @@ import org.springframework.web.bind.annotation.*;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
-    @PostMapping("/create")
-    public Long create_chatRoom(@RequestParam String type){
 
-        // test log
-        log.info("admin : ChatRoomController : create_chatRoom");
-        return chatRoomService.createChatRoom(type);
-    }
 }

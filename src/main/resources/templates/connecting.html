@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+
+<head th:replace="fragments/home_header::home_header"/>
+
+<body>
+
+    <section class="content">
+        <div class="box">
+
+            <div class="container">
+                <div class="box-header">
+                    <h3 class="box-title">접속중인 유저</h3>
+                </div>
+
+                <div class="row" th:if="${accountList} != null">
+                    <p>현재 접속중인 유저 수 : </p>
+                    <p th:text="${count}"></p>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">닉네임</th>
+                                <th scope="col">연결된 시각</th>
+                                <th scope="col">ip 주소</th>
+                                <th scope="col">접속중인 채팅방</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="account : ${accountList}">
+                                <th scope="row"></th>
+                                <td th:text="${account.nickname}">닉네임</td>
+                                <td th:text="${account.created}">연결된 시각</td>
+
+                                <td th:if="${account.sessionIp}!=null" th:text="${account.sessionIp}">ip</td>
+                                <td th:unless="${account.sessionIp}!=null" th:text="null">ip</td>
+
+
+                                <td th:if="${account.chatRoom} != null" th:text="${account.chatRoom.type}">채팅방</td>
+                                <td th:unless="${account.chatRoom} != null" th:text="null">채팅방</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box-body" th:unless="${accountList} != null" th:text="${isNull}">
+
+                </div>
+                <a class="btn" href="/"> 돌아가기</a>
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</body>
+</html>

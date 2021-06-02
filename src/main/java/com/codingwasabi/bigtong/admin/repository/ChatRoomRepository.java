@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
 
     Optional<ChatRoom> findChatRoomByType(RoomType type);
+
+    boolean existsChatRoomByType(RoomType type);
 }

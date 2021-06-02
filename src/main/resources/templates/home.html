@@ -3,21 +3,31 @@
 
 <head th:replace="fragments/home_header::home_header"/>
 
+<style>
+    .container-main{
+        display: table;
+        margin-left: auto;
+        margin-right: auto ;
+    }
+</style>
 <body>
 
-    <div class="container">
+    <div class="container container-main">
 
         <div class="mainmenu">
             <h1>통큰 경매 관리자 페이지</h1>
 
-            <p>
-                <a class="btn btn-lg btn-info btn-size">방 생성하기</a>
-            </p>
+            <form role="form" action="/admin/create" method="POST">
+                <p>
+                    <button class="btn btn-lg btn-info btn-size" type="submit">방 생성하기</button>
+                </p>
+            </form>
 
-            <p>
-                <a class="btn btn-lg btn-info btn-size">접속중인 유저</a>
-            </p>
-
+            <form role="form" action="/admin/connecting" method="GET">
+                <p>
+                    <button class="btn btn-lg btn-info btn-size">접속중인 유저</button>
+                </p>
+            </form>
             <h2>품목 관리</h2>
             <p class="lead">GRAIN</p>
             <p>
