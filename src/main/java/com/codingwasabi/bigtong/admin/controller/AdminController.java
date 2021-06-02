@@ -7,6 +7,7 @@ import com.codingwasabi.bigtong.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +26,15 @@ public class AdminController {
 
     // 바꿔야함
     @GetMapping("/connecting")
-    public String showConnectiongUser(){
+    public String showConnectiongUser(Model model){
 
-        return null;
+        List<Account> accountList = adminService.userConnecting();
+
+        model.addAttribute("accountList",accountList);
+        model.addAttribute("count",accountList.size());
+        model.addAttribute("isNull","접속된 유저가 현재 없습니다.");
+
+        return "connecting";
     }
 
 

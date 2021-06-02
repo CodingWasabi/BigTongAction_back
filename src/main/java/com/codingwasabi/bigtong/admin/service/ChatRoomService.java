@@ -39,12 +39,14 @@ public class ChatRoomService {
 
 
     public boolean checkRoomExist(){
-        chatRoomRepository.findChatRoomByType(RoomType.GRAIN).orElseThrow(ChatRoomNotExistException::new);
-        chatRoomRepository.findChatRoomByType(RoomType.FISH).orElseThrow(ChatRoomNotExistException::new);
-        chatRoomRepository.findChatRoomByType(RoomType.FRUIT).orElseThrow(ChatRoomNotExistException::new);
-        chatRoomRepository.findChatRoomByType(RoomType.VEGETABLE).orElseThrow(ChatRoomNotExistException::new);
-        chatRoomRepository.findChatRoomByType(RoomType.MEAT).orElseThrow(ChatRoomNotExistException::new);
+        if(chatRoomRepository.existsChatRoomByType(RoomType.GRAIN)
+            &&chatRoomRepository.existsChatRoomByType(RoomType.FRUIT)
+            &&chatRoomRepository.existsChatRoomByType(RoomType.FISH)
+            &&chatRoomRepository.existsChatRoomByType(RoomType.VEGETABLE)
+            &&chatRoomRepository.existsChatRoomByType(RoomType.MEAT)
+        )
+            return true;
 
-        return true;
+        return false;
     }
 }
