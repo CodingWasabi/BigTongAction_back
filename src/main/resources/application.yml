@@ -16,7 +16,7 @@ spring:
     database: mysql
 
   datasource:
-    url: jdbc:mysql://gogogo.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com/gogogo_db
+    url: jdbc:mysql://codingwasabi-mysql.ccszmnhxhmwx.ap-northeast-2.rds.amazonaws.com:3306/bigtong_db?serverTimezone=Asia/Seoul
     username: admin
     password: 1q2w3e4r!
     driver-class-name: com.mysql.cj.jdbc.Driver
