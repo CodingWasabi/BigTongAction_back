@@ -4,19 +4,14 @@ import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
-import com.codingwasabi.bigtong.websocket.message.LeftPeople;
-import com.codingwasabi.bigtong.websocket.message.UpdateMessage;
+import com.codingwasabi.bigtong.websocket.message.ChatMessage;
+import com.codingwasabi.bigtong.websocket.message.MessageType;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.websocket.Session;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -76,7 +71,14 @@ public class AccountService {
             accountRepository.deleteAccountByNickname(nickname);
             chatRoomRepository.flush();
 
-            chatService.sendMessageAll(new LeftPeople(chatRoom.getAccountList().size()),chatRoom,webSocketSessionMap);
+            ChatMessage exitMessage = ChatMessage.builder()
+                    .messageType(MessageType.TALK)
+                    .leftPeople(chatRoom.getAccountList().size())
+                    .roomType(chatRoom.getType())
+                    .message(nickname+"님이 퇴장하셨습니다.")
+                    .nickname("ADMIN")
+                    .build();
+            chatService.sendMessageAll(exitMessage,chatRoom,webSocketSessionMap);
 
         }
 
