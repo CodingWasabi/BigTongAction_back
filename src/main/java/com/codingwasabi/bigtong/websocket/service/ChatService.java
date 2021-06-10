@@ -81,12 +81,19 @@ public class ChatService {
         // EXIT 인경우
         else if (messageType == MessageType.EXIT){
             // account 에서 chatroom 삭제
-            ChatRoom room = account.getChatRoom();
+            ChatMessage exitMessage = ChatMessage.builder()
+                    .roomType(account.getChatRoom().getType())
+                    .message(account.getNickname()+"님이 퇴장하셨습니다.")
+                    .nickname("ADMIN")
+                    .messageType(MessageType.TALK)
+                    .leftPeople(chatRoom.getAccountList().size()-1)
+                    .build();
+
             account.exitRoom();
 
             // map 에서 삭제
             webSocketSessionMap.remove(account);
-            sendMessageAll(new LeftPeople(chatRoom.getAccountList().size()),chatRoom,webSocketSessionMap);
+            sendMessageAll(exitMessage,chatRoom,webSocketSessionMap);
             chatRoomRepository.flush();
 
         }
