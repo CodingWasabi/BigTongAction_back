@@ -1,12 +1,10 @@
 package com.codingwasabi.bigtong.main.controller;
 
+import com.codingwasabi.bigtong.main.dto.CurrentReturnDto;
 import com.codingwasabi.bigtong.main.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -30,6 +28,16 @@ public class AccountController {
         }
 
         return "error/failed";
+    }
+
+    @GetMapping("/current")
+    public CurrentReturnDto returnCurrent(){
+        return accountService.returnCurrent();
+    }
+
+    @DeleteMapping("/logout")
+    public boolean logout(@RequestParam String name){
+        return accountService.deleteNickname(name);
     }
 
 }

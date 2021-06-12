@@ -3,7 +3,9 @@ package com.codingwasabi.bigtong.main.service;
 import com.codingwasabi.bigtong.admin.entity.ChatRoom;
 import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
+import com.codingwasabi.bigtong.main.dto.CurrentReturnDto;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
+import com.codingwasabi.bigtong.websocket.exception.AccountNotExistException;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
 import com.codingwasabi.bigtong.websocket.message.MessageType;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -85,5 +88,40 @@ public class AccountService {
         // 없다면
         else
             accountRepository.deleteAccountByNickname(nickname);
+    }
+
+    public CurrentReturnDto returnCurrent(){
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
+        CurrentReturnDto currentReturnDto = new CurrentReturnDto();
+
+        for(ChatRoom chatRoom : chatRoomList){
+            switch (chatRoom.getType()){
+                case GRAIN : currentReturnDto.setGRAIN(chatRoom.getAccountList().size());
+                             break;
+                case FISH  : currentReturnDto.setFISH(chatRoom.getAccountList().size());
+                             break;
+                case VEGETABLE : currentReturnDto.setVEGETABLE(chatRoom.getAccountList().size());
+                             break;
+                case MEAT : currentReturnDto.setMEAT(chatRoom.getAccountList().size());
+                             break;
+                case FRUIT : currentReturnDto.setFRUIT(chatRoom.getAccountList().size());
+                             break;
+            }
+        }
+
+        return currentReturnDto;
+    }
+
+    @Transactional
+    public boolean deleteNickname(String name){
+
+        try {
+            Account account = accountRepository.findByNickname(name).orElseThrow(AccountNotExistException::new);
+        }catch (AccountNotExistException a){
+            return false;
+        }
+
+        accountRepository.deleteAccountByNickname(name);
+        return true;
     }
 }
