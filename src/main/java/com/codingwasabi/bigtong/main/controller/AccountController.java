@@ -35,4 +35,9 @@ public class AccountController {
         return accountService.returnCurrent();
     }
 
+    @DeleteMapping("/logout")
+    public boolean logout(@RequestParam String name){
+        return accountService.deleteNickname(name);
+    }
+
 }

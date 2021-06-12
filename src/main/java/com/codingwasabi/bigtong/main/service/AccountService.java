@@ -5,6 +5,7 @@ import com.codingwasabi.bigtong.admin.repository.ChatRoomRepository;
 import com.codingwasabi.bigtong.main.Account;
 import com.codingwasabi.bigtong.main.dto.CurrentReturnDto;
 import com.codingwasabi.bigtong.main.repository.AccountRepository;
+import com.codingwasabi.bigtong.websocket.exception.AccountNotExistException;
 import com.codingwasabi.bigtong.websocket.message.ChatMessage;
 import com.codingwasabi.bigtong.websocket.message.MessageType;
 import com.codingwasabi.bigtong.websocket.service.ChatService;
@@ -109,5 +110,18 @@ public class AccountService {
         }
 
         return currentReturnDto;
+    }
+
+    @Transactional
+    public boolean deleteNickname(String name){
+
+        try {
+            Account account = accountRepository.findByNickname(name).orElseThrow(AccountNotExistException::new);
+        }catch (AccountNotExistException a){
+            return false;
+        }
+
+        accountRepository.deleteAccountByNickname(name);
+        return true;
     }
 }
